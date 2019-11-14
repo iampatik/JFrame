@@ -6,6 +6,16 @@
 package JFrame;
 
 import javax.swing.JFrame;
+import java.sql.*;
+import java.util.ArrayList;
+import medicineapp.Adult;
+import medicineapp.Allergies;
+import medicineapp.BodyPain;
+import medicineapp.Cough;
+import medicineapp.Headache;
+import medicineapp.Medicine;
+import medicineapp.SeniorCitizen;
+import medicineapp.User;
 
 /**
  *
@@ -17,10 +27,46 @@ public class Home1 extends javax.swing.JFrame {
      * Creates new form Home1
      */
     
+    ArrayList<User> userList = new ArrayList<User>();
+    ArrayList<Medicine> medList = new ArrayList<Medicine>();
+    
+    
     public Home1() {
         initComponents();
         this.setTitle("Home");
+        userList.add(new Adult(1, "Patchan", "Gwapoako", 19, 1000));
+        userList.add(new Adult(2, "Patrick", "Pogiako", 19, 5000));
+        userList.add(new SeniorCitizen(3, "Patik", "P@ssw0rd", 62, 5000));
+        userList.add(new User("Admin","Admin"));
+        medList.add(new BodyPain(1, "Ibuprofen + Paracetamol", "Alaxan", "Body Pain", 8.25, 100));
+        medList.add(new BodyPain(2, "Paracetamol Caffeine", "Rexidol", "Body Pain", 15.50, 75));
+        medList.add(new BodyPain(3, "Ibuprofen", "Medicol Advance", "Body Pain", 6.00, 100));
+        medList.add(new Allergies(4, "Cetirizine", "Allerkid", "Allergies", 8, 50));
+        medList.add(new Allergies(5, "Loratadine", "Allerta", "Allergies", 16, 50));
+        medList.add(new Allergies(6, "Mometasone Furoate", "Allerta Dermatec", "Allergies", 24, 50));
+        medList.add(new Cough(7, "Carbocisteine", "Solmux", "Cough", 17, 50));
+        medList.add(new Cough(8, "Ambroxol", "Myracof", "Cough", 22, 50));
+        medList.add(new Cough(9, "Ambroxol", "Expel OD", "Cough", 29, 50));
+        medList.add(new Headache(10, "Paracetamol", "Biogesic 325", "Headache", 6, 50));
+        medList.add(new Headache(11, "Paracetamol", "Biogesic", "Headache", 8, 50));
+        medList.add(new Headache(12, "Paracetamol", "UHP Fevertab", "Headache", 5, 50));
         
+        try {
+            Class.forName("com.mysql.jdbc.Driver");
+            Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/jframe","root","");
+            Statement stmt = con.createStatement();
+            String sql;
+            for(int i = 0; i<userList.size();i++){
+                
+                
+            }
+            sql = "SELECT id, first, last, age FROM Employees";
+            ResultSet rs = stmt.executeQuery(sql);
+        
+        }
+        catch(Exception e){
+            
+        }
     }
 
     /**
@@ -142,6 +188,10 @@ public class Home1 extends javax.swing.JFrame {
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 new Home1().setVisible(true);
+                
+                
+                
+                
             }
         });
     }
