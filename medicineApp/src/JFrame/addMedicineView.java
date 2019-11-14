@@ -16,6 +16,7 @@ public class addMedicineView extends javax.swing.JFrame {
      */
     public addMedicineView() {
         initComponents();
+        this.setTitle("Add Medicine");
     }
 
     /**

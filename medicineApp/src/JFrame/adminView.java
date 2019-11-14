@@ -16,6 +16,7 @@ public class adminView extends javax.swing.JFrame {
      */
     public adminView() {
         initComponents();
+        this.setTitle("Menu");
     }
 
     /**

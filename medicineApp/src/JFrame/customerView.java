@@ -16,6 +16,7 @@ public class customerView extends javax.swing.JFrame {
      */
     public customerView() {
         initComponents();
+        this.setTitle("Menu");
     }
 
     /**

@@ -40,14 +40,14 @@
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" attributes="0">
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Group type="103" alignment="0" groupAlignment="1" attributes="0">
-                          <Component id="logOutButton" min="-2" pref="215" max="-2" attributes="0"/>
-                          <Component id="changePassButton" min="-2" pref="215" max="-2" attributes="0"/>
-                          <Component id="viewOrderButton" min="-2" pref="215" max="-2" attributes="0"/>
-                          <Component id="displayMedButton" min="-2" pref="215" max="-2" attributes="0"/>
-                          <Component id="removeMedButton" min="-2" max="-2" attributes="0"/>
-                          <Group type="102" attributes="0">
-                              <EmptySpace min="-2" pref="147" max="-2" attributes="0"/>
+                      <Group type="102" alignment="0" attributes="0">
+                          <EmptySpace min="-2" pref="147" max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="1" attributes="0">
+                              <Component id="logOutButton" min="-2" pref="215" max="-2" attributes="0"/>
+                              <Component id="changePassButton" min="-2" pref="215" max="-2" attributes="0"/>
+                              <Component id="viewOrderButton" min="-2" pref="215" max="-2" attributes="0"/>
+                              <Component id="displayMedButton" min="-2" pref="215" max="-2" attributes="0"/>
+                              <Component id="removeMedButton" min="-2" max="-2" attributes="0"/>
                               <Component id="addMedButton" min="-2" pref="215" max="-2" attributes="0"/>
                           </Group>
                       </Group>
