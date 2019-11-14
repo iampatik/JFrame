@@ -5,6 +5,10 @@
  */
 package JFrame;
 
+
+import java.sql.*;
+import javax.swing.JOptionPane;
+
 /**
  *
  * @author tancincoja_sd2022
@@ -14,6 +18,9 @@ public class logIn extends javax.swing.JFrame {
     /**
      * Creates new form logIn
      */
+    boolean logged = false;
+    customerView view = new customerView();
+    
     public logIn() {
         initComponents();
         this.setTitle("Log In");
@@ -50,6 +57,11 @@ public class logIn extends javax.swing.JFrame {
         logInSubmitButton.setFont(new java.awt.Font("Serif", 1, 24)); // NOI18N
         logInSubmitButton.setText("Log In");
         logInSubmitButton.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        logInSubmitButton.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                logInSubmitButtonMouseClicked(evt);
+            }
+        });
         logInSubmitButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 logInSubmitButtonActionPerformed(evt);
@@ -137,6 +149,41 @@ public class logIn extends javax.swing.JFrame {
     private void passwordInputActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_passwordInputActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_passwordInputActionPerformed
+
+    private void logInSubmitButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_logInSubmitButtonMouseClicked
+        String uname = usernameInput.getText();
+        String pass = passwordInput.getText();
+        
+        try{
+            Class.forName("com.mysql.jdbc.Driver");
+            Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/jframe","","");
+            Statement stmt = con.createStatement();
+            String query = "Select * from users";
+            ResultSet rs = stmt.executeQuery(query);
+            while(rs.next()){
+                String username = rs.getString("username");
+                String password = rs.getString("password");
+                
+                if(uname.equals(username) && pass.equals(password) && uname.equals("Admin") == false){
+                    
+                    logged = true;
+                }
+                else {
+                    JOptionPane.showMessageDialog(null, "Error Credentials");
+                }
+            }
+            
+        }
+        catch(Exception e){
+            JOptionPane.showMessageDialog(null, "Error while connecting!");
+        }
+        
+        if(logged == true){
+            this.setVisible(false);
+            view.setVisible(true);
+        }
+        
+    }//GEN-LAST:event_logInSubmitButtonMouseClicked
 
     /**
      * @param args the command line arguments

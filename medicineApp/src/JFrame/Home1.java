@@ -8,6 +8,7 @@ package JFrame;
 import javax.swing.JFrame;
 import java.sql.*;
 import java.util.ArrayList;
+import javax.swing.JOptionPane;
 import medicineapp.Adult;
 import medicineapp.Allergies;
 import medicineapp.BodyPain;
@@ -26,18 +27,17 @@ public class Home1 extends javax.swing.JFrame {
     /**
      * Creates new form Home1
      */
-    
     ArrayList<User> userList = new ArrayList<User>();
     ArrayList<Medicine> medList = new ArrayList<Medicine>();
-    
-    
+    int count = 0;
+
     public Home1() {
         initComponents();
         this.setTitle("Home");
         userList.add(new Adult(1, "Patchan", "Gwapoako", 19, 1000));
         userList.add(new Adult(2, "Patrick", "Pogiako", 19, 5000));
         userList.add(new SeniorCitizen(3, "Patik", "P@ssw0rd", 62, 5000));
-        userList.add(new User("Admin","Admin"));
+        userList.add(new User("Admin", "Admin"));
         medList.add(new BodyPain(1, "Ibuprofen + Paracetamol", "Alaxan", "Body Pain", 8.25, 100));
         medList.add(new BodyPain(2, "Paracetamol Caffeine", "Rexidol", "Body Pain", 15.50, 75));
         medList.add(new BodyPain(3, "Ibuprofen", "Medicol Advance", "Body Pain", 6.00, 100));
@@ -50,23 +50,32 @@ public class Home1 extends javax.swing.JFrame {
         medList.add(new Headache(10, "Paracetamol", "Biogesic 325", "Headache", 6, 50));
         medList.add(new Headache(11, "Paracetamol", "Biogesic", "Headache", 8, 50));
         medList.add(new Headache(12, "Paracetamol", "UHP Fevertab", "Headache", 5, 50));
-        
+
         try {
             Class.forName("com.mysql.jdbc.Driver");
-            Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/jframe","root","");
+            Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/jframe", "", "");
             Statement stmt = con.createStatement();
-            String sql;
-            for(int i = 0; i<userList.size();i++){
-                
-                
+
+            for (int i = 0; i < userList.size(); i++) {
+                if (userList.get(i).getUserName().equals("Admin")) {
+                    String sql = "INSERT INTO `users`(`id`, `username`, `password`, `age`, `money`) VALUES (" + null + "," + String.valueOf(userList.get(i).getUserName()) + "," + String.valueOf(userList.get(i).getPassWord()) + "," + null + "," + null + ")";
+                    ResultSet rs = stmt.executeQuery(sql);
+                    System.out.println(rs);
+                } else {
+                    String sql = "INSERT INTO `users`(`id`, `username`, `password`, `age`, `money`) VALUES (" + String.valueOf(userList.get(i).getId()) + "," + userList.get(i).getUserName() + "," + String.valueOf(userList.get(i).getPassWord()) + "," + String.valueOf(userList.get(i).getAge()) + "," + String.valueOf(userList.get(i).getMoney()) + ")";
+                    ResultSet rs = stmt.executeQuery(sql);
+                }
             }
-            sql = "SELECT id, first, last, age FROM Employees";
-            ResultSet rs = stmt.executeQuery(sql);
-        
+
+            for (int i = 0; i < medList.size(); i++) {
+                String med = "INSERT INTO `medicine`(`id`, `genericname`, `brandname`, `medicinetype`, `price`, `stock`) VALUES (" + String.valueOf(medList.get(i).getId()) + "," + String.valueOf(medList.get(i).getGenericName()) + "," + String.valueOf(medList.get(i).getBrandName()) + "," + String.valueOf(medList.get(i).getMedicineType()) + "," + String.valueOf(medList.get(i).getPrice()) + "," + String.valueOf(medList.get(i).getStock()) + ")";
+                ResultSet rs = stmt.executeQuery(med);
+            }
+
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, e);
         }
-        catch(Exception e){
-            
-        }
+
     }
 
     /**
@@ -188,10 +197,7 @@ public class Home1 extends javax.swing.JFrame {
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 new Home1().setVisible(true);
-                
-                
-                
-                
+
             }
         });
     }
