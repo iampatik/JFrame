@@ -139,7 +139,7 @@ public class Home1 extends javax.swing.JFrame {
         Class.forName("com.mysql.jdbc.Driver");
         Connection con = DriverManager.getConnection("jdbc:mysql://localhost/jframe", "root", "");
         java.sql.Statement stmt = con.createStatement();
-        ResultSet rs = stmt.executeQuery("SELECT * FROM users");
+        ResultSet rs = stmt.executeQuery("SELECT * FROM `users`");
 
         while (rs.next() == false) {
             

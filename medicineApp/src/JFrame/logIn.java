@@ -156,31 +156,41 @@ public class logIn extends javax.swing.JFrame {
         
         try{
             Class.forName("com.mysql.jdbc.Driver");
-            Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/jframe","root","");
-            Statement stmt = con.createStatement();
-            String query = "Select username,password from users where username='"+uname+";";
-            ResultSet rs = stmt.executeQuery(query);
-            if(pass.equals(rs.getString("password"))){
-                this.setVisible(false);
-                customerView custom = new customerView();
-                custom.setVisible(true);
-                JOptionPane.showMessageDialog(null, "Logged In");           
+            Connection con = DriverManager.getConnection("jdbc:mysql://localhost/jframe","root","");
+            java.sql.Statement stmt = con.createStatement();
+            ResultSet rs = stmt.executeQuery("SELECT * FROM `users`");
+            System.out.println("Running!");
+            
+            while(rs.next()){
+                if(rs.getString("username").equals(uname) && rs.getString("password").equals(pass)){
+                    this.setVisible(false);
+                    customerView custom = new customerView();
+                    custom.setVisible(true);
+                    JOptionPane.showMessageDialog(null, "Logged In");
+                    break;
+                }                      
             }
-            else{
-                JOptionPane.showMessageDialog(null, "Invalid Credentials");  
+            
+            if(rs.getString("username").equals(uname) && rs.getString("password").equals(pass) == false){
+                JOptionPane.showMessageDialog(null, "Invalid Credentials");
+            
             }
             
             
+//            if(pass.equals(rs.getNString("password"))){
+//                this.setVisible(false);
+//                customerView custom = new customerView();
+//                custom.setVisible(true);
+//                JOptionPane.showMessageDialog(null, "Logged In");           
+//            }
+//            else{
+//                JOptionPane.showMessageDialog(null, "Invalid Credentials");  
+//            }
+ 
         }
         catch(Exception e){
             JOptionPane.showMessageDialog(null, "Error while connecting!");
-        }
-        
-        if(logged == true){
-            this.setVisible(false);
-            view.setVisible(true);
-        }
-        
+        }       
     }//GEN-LAST:event_logInSubmitButtonMouseClicked
 
     /**
