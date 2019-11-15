@@ -117,11 +117,6 @@
               <Font name="Serif" size="24" style="1"/>
             </Property>
             <Property name="text" type="java.lang.String" value="Log In"/>
-            <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
-              <Border info="org.netbeans.modules.form.compat2.border.LineBorderInfo">
-                <LineBorder/>
-              </Border>
-            </Property>
           </Properties>
           <Events>
             <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="logInSubmitButtonMouseClicked"/>

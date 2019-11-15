@@ -139,7 +139,7 @@ public class logIn extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void logInSubmitButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_logInSubmitButtonActionPerformed
-        // TODO add your handling code here:
+            
     }//GEN-LAST:event_logInSubmitButtonActionPerformed
 
     private void usernameInputActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_usernameInputActionPerformed
@@ -156,22 +156,20 @@ public class logIn extends javax.swing.JFrame {
         
         try{
             Class.forName("com.mysql.jdbc.Driver");
-            Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/jframe","","");
+            Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/jframe","root","");
             Statement stmt = con.createStatement();
-            String query = "Select * from users";
+            String query = "Select username,password from users where username='"+uname+";";
             ResultSet rs = stmt.executeQuery(query);
-            while(rs.next()){
-                String username = rs.getString("username");
-                String password = rs.getString("password");
-                
-                if(uname.equals(username) && pass.equals(password) && uname.equals("Admin") == false){
-                    
-                    logged = true;
-                }
-                else {
-                    JOptionPane.showMessageDialog(null, "Error Credentials");
-                }
+            if(pass.equals(rs.getString("password"))){
+                this.setVisible(false);
+                customerView custom = new customerView();
+                custom.setVisible(true);
+                JOptionPane.showMessageDialog(null, "Logged In");           
             }
+            else{
+                JOptionPane.showMessageDialog(null, "Invalid Credentials");  
+            }
+            
             
         }
         catch(Exception e){

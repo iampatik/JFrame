@@ -8,6 +8,8 @@ package JFrame;
 import javax.swing.JFrame;
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import medicineapp.Adult;
 import medicineapp.Allergies;
@@ -31,10 +33,10 @@ public class Home1 extends javax.swing.JFrame {
     ArrayList<Medicine> medList = new ArrayList<Medicine>();
     int count = 0;
 
-    public Home1() {
+    public Home1() throws SQLException, ClassNotFoundException {
         initComponents();
         this.setTitle("Home");
-        created();
+        this.created();
     }
 
     /**
@@ -115,7 +117,7 @@ public class Home1 extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    public void created(){
+    public void created() throws SQLException, ClassNotFoundException {
         userList.add(new Adult(1, "Patchan", "Gwapoako", 19, 1000));
         userList.add(new Adult(2, "Patrick", "Pogiako", 19, 5000));
         userList.add(new SeniorCitizen(3, "Patik", "P@ssw0rd", 62, 5000));
@@ -133,51 +135,66 @@ public class Home1 extends javax.swing.JFrame {
         medList.add(new Headache(11, "Paracetamol", "Biogesic", "Headache", 8, 50));
         medList.add(new Headache(12, "Paracetamol", "UHP Fevertab", "Headache", 5, 50));
 
-        try {
-            Class.forName("com.mysql.jdbc.Driver");
-            Connection con = DriverManager.getConnection("jdbc:mysql://localhost:8081/phpmyadmin/jframe", "root", "admin");
-            java.sql.Statement stmt = con.createStatement();
-            
-            System.out.println("Run");
+        
+        Class.forName("com.mysql.jdbc.Driver");
+        Connection con = DriverManager.getConnection("jdbc:mysql://localhost/jframe", "root", "");
+        java.sql.Statement stmt = con.createStatement();
+        ResultSet rs = stmt.executeQuery("SELECT * FROM users");
 
-            for (int i = 0; i < userList.size(); i++) {
-                System.out.println("Running");
-                if (userList.get(i).getUserName().equals("Admin") == true) {
-                    String sql = "INSERT INTO `admin`(`username`, `password`) VALUES (`" + userList.get(i).getUserName() + "`,`" + userList.get(i).getPassWord()+"`)";
-                    stmt.executeUpdate(sql);
-                    System.out.println("Updated!");
-                    con.close();
-                    
-                } else {
-                    String sql = "INSERT INTO `users`(`id`, `username`, `password`, `age`, `money`) VALUES (`" + String.valueOf(userList.get(i).getId()) + "`,`" + userList.get(i).getUserName() + "`,`" + String.valueOf(userList.get(i).getPassWord()) + "`,`" + String.valueOf(userList.get(i).getAge()) + "`,`" + String.valueOf(userList.get(i).getMoney()) + "`)";
-                    stmt.executeUpdate(sql);
-                    con.close();
+        while (rs.next() == false) {
+            
+            try {
+                System.out.println("Run");
+
+                for (int i = 0; i < userList.size(); i++) {
+                    System.out.println("Running");
+                    if (userList.get(i).getUserName().equals("Admin")) {
+                        System.out.println("Going to update");
+                        String syntax = userList.get(i).getUserName() + "','" + userList.get(i).getPassWord();
+                        String sql = "INSERT INTO `admin`(`username`, `password`) VALUES ('" + syntax + "')";
+                        stmt.executeUpdate(sql);
+                        System.out.println("Updated!");
+
+                    } else {
+                        System.out.println("Naa diri ang pag-read");
+                        String synt = "'" + userList.get(i).getUserName() + "','" + userList.get(i).getPassWord() + "'," + Integer.toString(userList.get(i).getAge()) + "," + Double.toString(userList.get(i).getMoney());
+                        String sql = "INSERT INTO `users`(`username`, `password`, `age`, `money`) VALUES (" + synt + ")";
+                        stmt.executeUpdate(sql);
+
+//                    String sql1 = "INSERT INTO `users`(`username`, `password`, `age`, `money`) VALUES (%s,%s,%s,%s)";
+//                    stmt.executeUpdate(sql1,(userList.get(i).getUserName() , userList.get(i).getPassWord() , Integer.toString(userList.get(i).getAge()) , Double.toString(userList.get(i).getMoney()));
+                        System.out.println("Inserted!");
+
+                    }
                 }
-            }
-            
-            //System.out.println("Running");
-            
-            for (int i = 0; i < medList.size(); i++) {
-                String med = "INSERT INTO `medicine`(`id`, `genericname`, `brandname`, `medicinetype`, `price`, `stock`) VALUES (`" + String.valueOf(medList.get(i).getId()) + "`,`" + String.valueOf(medList.get(i).getGenericName()) + "`,`" + String.valueOf(medList.get(i).getBrandName()) + "`,`" + String.valueOf(medList.get(i).getMedicineType()) + "`,`" + String.valueOf(medList.get(i).getPrice()) + "`,`" + String.valueOf(medList.get(i).getStock()) + "`)";
-                stmt.executeUpdate(med);
-                con.close();
-                //ResultSet rs = stmt.executeUpdate(med);
-            }
 
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, e);
+                //System.out.println("Running");
+                for (int i = 0; i < medList.size(); i++) {
+                    String med = "INSERT INTO `medicine`( `genericname`, `brandname`, `medicinetype`, `price`, `stock`) VALUES ('" + medList.get(i).getGenericName() + "','" + medList.get(i).getBrandName() + "','" + medList.get(i).getMedicineType() + "','" + String.valueOf(medList.get(i).getPrice()) + "','" + String.valueOf(medList.get(i).getStock()) + "')";
+                    stmt.executeUpdate(med);
+
+                    //ResultSet rs = stmt.executeUpdate(med);
+                }
+                con.close();
+
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(null, e);
+            }
         }
-    
+
     }
-    
+
+
     private void logInButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_logInButtonMouseClicked
         new logIn().setVisible(true);
-        this.setVisible(false);
+        //this.setVisible(false);
+        this.dispose();
     }//GEN-LAST:event_logInButtonMouseClicked
 
     private void registerButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_registerButtonMouseClicked
         new register().setVisible(true);
-        this.setVisible(false);
+        this.dispose();
+        //this.setVisible(false);
     }//GEN-LAST:event_registerButtonMouseClicked
 
     /**
@@ -210,7 +227,13 @@ public class Home1 extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new Home1().setVisible(true);
+                try {
+                    new Home1().setVisible(true);
+                } catch (SQLException ex) {
+                    Logger.getLogger(Home1.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (ClassNotFoundException ex) {
+                    Logger.getLogger(Home1.class.getName()).log(Level.SEVERE, null, ex);
+                }
 
             }
         });

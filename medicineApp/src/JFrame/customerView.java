@@ -250,4 +250,7 @@ public class customerView extends javax.swing.JFrame {
     private javax.swing.JButton viewOrdersButton;
     // End of variables declaration//GEN-END:variables
 
+
+    
+
 }
