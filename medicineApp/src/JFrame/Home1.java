@@ -135,20 +135,21 @@ public class Home1 extends javax.swing.JFrame {
 
         try {
             Class.forName("com.mysql.jdbc.Driver");
-            Connection con = DriverManager.getConnection("jdbc:mysql://localhost/jframe", "root", "");
+            Connection con = DriverManager.getConnection("jdbc:mysql://localhost:8081/phpmyadmin/jframe", "root", "admin");
             java.sql.Statement stmt = con.createStatement();
+            
             System.out.println("Run");
 
             for (int i = 0; i < userList.size(); i++) {
                 System.out.println("Running");
                 if (userList.get(i).getUserName().equals("Admin") == true) {
-                    String sql = "INSERT INTO `admin`(`username`, `password`) VALUES (" + userList.get(i).getUserName() + "," + userList.get(i).getPassWord()+")";
+                    String sql = "INSERT INTO `admin`(`username`, `password`) VALUES (`" + userList.get(i).getUserName() + "`,`" + userList.get(i).getPassWord()+"`)";
                     stmt.executeUpdate(sql);
                     System.out.println("Updated!");
                     con.close();
                     
                 } else {
-                    String sql = "INSERT INTO `users`(`id`, `username`, `password`, `age`, `money`) VALUES (" + String.valueOf(userList.get(i).getId()) + "," + userList.get(i).getUserName() + "," + String.valueOf(userList.get(i).getPassWord()) + "," + String.valueOf(userList.get(i).getAge()) + "," + String.valueOf(userList.get(i).getMoney()) + ")";
+                    String sql = "INSERT INTO `users`(`id`, `username`, `password`, `age`, `money`) VALUES (`" + String.valueOf(userList.get(i).getId()) + "`,`" + userList.get(i).getUserName() + "`,`" + String.valueOf(userList.get(i).getPassWord()) + "`,`" + String.valueOf(userList.get(i).getAge()) + "`,`" + String.valueOf(userList.get(i).getMoney()) + "`)";
                     stmt.executeUpdate(sql);
                     con.close();
                 }
@@ -157,7 +158,7 @@ public class Home1 extends javax.swing.JFrame {
             //System.out.println("Running");
             
             for (int i = 0; i < medList.size(); i++) {
-                String med = "INSERT INTO `medicine`(`id`, `genericname`, `brandname`, `medicinetype`, `price`, `stock`) VALUES (" + String.valueOf(medList.get(i).getId()) + "," + String.valueOf(medList.get(i).getGenericName()) + "," + String.valueOf(medList.get(i).getBrandName()) + "," + String.valueOf(medList.get(i).getMedicineType()) + "," + String.valueOf(medList.get(i).getPrice()) + "," + String.valueOf(medList.get(i).getStock()) + ")";
+                String med = "INSERT INTO `medicine`(`id`, `genericname`, `brandname`, `medicinetype`, `price`, `stock`) VALUES (`" + String.valueOf(medList.get(i).getId()) + "`,`" + String.valueOf(medList.get(i).getGenericName()) + "`,`" + String.valueOf(medList.get(i).getBrandName()) + "`,`" + String.valueOf(medList.get(i).getMedicineType()) + "`,`" + String.valueOf(medList.get(i).getPrice()) + "`,`" + String.valueOf(medList.get(i).getStock()) + "`)";
                 stmt.executeUpdate(med);
                 con.close();
                 //ResultSet rs = stmt.executeUpdate(med);
