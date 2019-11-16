@@ -153,6 +153,7 @@ public class logIn extends javax.swing.JFrame {
     private void logInSubmitButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_logInSubmitButtonMouseClicked
         String uname = usernameInput.getText();
         String pass = passwordInput.getText();
+        boolean loggedIn = false;
         
         try{
             Class.forName("com.mysql.jdbc.Driver");
@@ -175,21 +176,16 @@ public class logIn extends javax.swing.JFrame {
                 JOptionPane.showMessageDialog(null, "Invalid Credentials");
             
             }
-            
-            
-//            if(pass.equals(rs.getNString("password"))){
-//                this.setVisible(false);
-//                customerView custom = new customerView();
-//                custom.setVisible(true);
-//                JOptionPane.showMessageDialog(null, "Logged In");           
-//            }
-//            else{
-//                JOptionPane.showMessageDialog(null, "Invalid Credentials");  
-//            }
  
         }
         catch(Exception e){
-            JOptionPane.showMessageDialog(null, "Error while connecting!");
+            if(loggedIn == false){
+                JOptionPane.showMessageDialog(null, "Invalid Credentials");
+            }
+            else {
+                JOptionPane.showMessageDialog(null, "Error while connecting!");
+            }
+            
         }       
     }//GEN-LAST:event_logInSubmitButtonMouseClicked
 

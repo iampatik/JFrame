@@ -161,8 +161,6 @@ public class Home1 extends javax.swing.JFrame {
                         String sql = "INSERT INTO `users`(`username`, `password`, `age`, `money`) VALUES (" + synt + ")";
                         stmt.executeUpdate(sql);
 
-//                    String sql1 = "INSERT INTO `users`(`username`, `password`, `age`, `money`) VALUES (%s,%s,%s,%s)";
-//                    stmt.executeUpdate(sql1,(userList.get(i).getUserName() , userList.get(i).getPassWord() , Integer.toString(userList.get(i).getAge()) , Double.toString(userList.get(i).getMoney()));
                         System.out.println("Inserted!");
 
                     }
