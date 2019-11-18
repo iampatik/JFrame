@@ -62,10 +62,8 @@
                               <Component id="ageField" alignment="0" pref="321" max="32767" attributes="0"/>
                               <Component id="jLabel7" alignment="0" min="-2" max="-2" attributes="0"/>
                               <Component id="moneyField" alignment="0" pref="321" max="32767" attributes="0"/>
-                              <Group type="103" alignment="0" groupAlignment="1" max="-2" attributes="0">
-                                  <Component id="passwordField" alignment="0" max="32767" attributes="0"/>
-                                  <Component id="usernameField" alignment="0" pref="320" max="32767" attributes="0"/>
-                              </Group>
+                              <Component id="passwordField" alignment="0" max="32767" attributes="0"/>
+                              <Component id="usernameField" alignment="0" pref="320" max="32767" attributes="0"/>
                               <Component id="confirmpassField" alignment="0" max="32767" attributes="0"/>
                           </Group>
                       </Group>

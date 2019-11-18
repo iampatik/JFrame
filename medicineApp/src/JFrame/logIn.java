@@ -5,7 +5,6 @@
  */
 package JFrame;
 
-
 import java.sql.*;
 import javax.swing.JOptionPane;
 
@@ -18,9 +17,6 @@ public class logIn extends javax.swing.JFrame {
     /**
      * Creates new form logIn
      */
-    boolean logged = false;
-    customerView view = new customerView();
-    
     public logIn() {
         initComponents();
         this.setTitle("Log In");
@@ -139,7 +135,7 @@ public class logIn extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void logInSubmitButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_logInSubmitButtonActionPerformed
-            
+
     }//GEN-LAST:event_logInSubmitButtonActionPerformed
 
     private void usernameInputActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_usernameInputActionPerformed
@@ -154,39 +150,48 @@ public class logIn extends javax.swing.JFrame {
         String uname = usernameInput.getText();
         String pass = passwordInput.getText();
         boolean loggedIn = false;
-        
-        try{
+
+        try {
             Class.forName("com.mysql.jdbc.Driver");
-            Connection con = DriverManager.getConnection("jdbc:mysql://localhost/jframe","root","");
+            Connection con = DriverManager.getConnection("jdbc:mysql://localhost/jframe", "root", "");
             java.sql.Statement stmt = con.createStatement();
-            ResultSet rs = stmt.executeQuery("SELECT * FROM `users`");
-            System.out.println("Running!");
+            ResultSet rs = stmt.executeQuery("SELECT * FROM `users` where username = '" + uname + "' and password = '" + pass + "'");
             
-            while(rs.next()){
-                if(rs.getString("username").equals(uname) && rs.getString("password").equals(pass)){
-                    this.setVisible(false);
-                    customerView custom = new customerView();
-                    custom.setVisible(true);
-                    JOptionPane.showMessageDialog(null, "Logged In");
-                    break;
-                }                      
+            System.out.println("Running in log in");
+            
+            if (rs.next()) {
+                System.out.println("Customer!");
+                System.out.println("Running in customer!");
+                this.setVisible(false);
+                customerView custom = new customerView();
+                custom.setVisible(true);
+                loggedIn = true;
+                JOptionPane.showMessageDialog(null, "Logged in as customer!");
+            } else {
+                System.out.println("admin!");
+                ResultSet rs1 = stmt.executeQuery("SELECT * FROM `admin`  where username = '" + uname + "' and password = '" + pass + "'");
+//                while (rs1.next()) {
+                System.out.println("Running in admin!");
+//                    if (rs1.getString("username").equals(uname) && rs1.getString("password").equals(pass)) {
+                this.setVisible(false);
+                adminView admin = new adminView();
+                admin.setVisible(true);
+                loggedIn = true;
+                JOptionPane.showMessageDialog(null, "Logged in as administrator!");
+//                        break;
+//                    }
+//                }
             }
-            
-            if(rs.getString("username").equals(uname) && rs.getString("password").equals(pass) == false){
+
+            if (loggedIn == false) {
                 JOptionPane.showMessageDialog(null, "Invalid Credentials");
-            
             }
- 
+
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Error while connecting!");
         }
-        catch(Exception e){
-            if(loggedIn == false){
-                JOptionPane.showMessageDialog(null, "Invalid Credentials");
-            }
-            else {
-                JOptionPane.showMessageDialog(null, "Error while connecting!");
-            }
-            
-        }       
+
+
     }//GEN-LAST:event_logInSubmitButtonMouseClicked
 
     /**
@@ -218,6 +223,7 @@ public class logIn extends javax.swing.JFrame {
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
+            @Override
             public void run() {
                 new logIn().setVisible(true);
             }

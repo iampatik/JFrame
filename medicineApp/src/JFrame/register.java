@@ -194,7 +194,7 @@ public class register extends javax.swing.JFrame {
             Connection con = DriverManager.getConnection("jdbc:mysql://localhost/jframe", "root", "");
             java.sql.Statement stmt = con.createStatement();
             ResultSet rs = stmt.executeQuery("SELECT * FROM `users`");
-            System.out.println("Running!");
+            //System.out.println("Running!");
 
             while (rs.next()) {
                 if (rs.getString("username").equals(uname)) {

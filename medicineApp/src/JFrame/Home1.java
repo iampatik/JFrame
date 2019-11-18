@@ -11,14 +11,8 @@ import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
-import medicineapp.Adult;
-import medicineapp.Allergies;
-import medicineapp.BodyPain;
-import medicineapp.Cough;
-import medicineapp.Headache;
-import medicineapp.Medicine;
-import medicineapp.SeniorCitizen;
-import medicineapp.User;
+import medicineapp.*;
+
 
 /**
  *
@@ -141,13 +135,12 @@ public class Home1 extends javax.swing.JFrame {
         java.sql.Statement stmt = con.createStatement();
         ResultSet rs = stmt.executeQuery("SELECT * FROM `users`");
 
-        while (rs.next() == false) {
-            
+        while (rs.next() == false) {           
             try {
                 System.out.println("Run");
 
                 for (int i = 0; i < userList.size(); i++) {
-                    System.out.println("Running");
+                    //System.out.println("Running");
                     if (userList.get(i).getUserName().equals("Admin")) {
                         System.out.println("Going to update");
                         String syntax = userList.get(i).getUserName() + "','" + userList.get(i).getPassWord();
@@ -161,19 +154,19 @@ public class Home1 extends javax.swing.JFrame {
                         String sql = "INSERT INTO `users`(`username`, `password`, `age`, `money`) VALUES (" + synt + ")";
                         stmt.executeUpdate(sql);
 
-                        System.out.println("Inserted!");
+                        //System.out.println("Inserted!");
 
                     }
                 }
 
-                //System.out.println("Running");
                 for (int i = 0; i < medList.size(); i++) {
+                    //System.out.println("Running from medicine");
                     String med = "INSERT INTO `medicine`( `genericname`, `brandname`, `medicinetype`, `price`, `stock`) VALUES ('" + medList.get(i).getGenericName() + "','" + medList.get(i).getBrandName() + "','" + medList.get(i).getMedicineType() + "','" + String.valueOf(medList.get(i).getPrice()) + "','" + String.valueOf(medList.get(i).getStock()) + "')";
                     stmt.executeUpdate(med);
 
                     //ResultSet rs = stmt.executeUpdate(med);
                 }
-                con.close();
+                //con.close();
 
             } catch (Exception e) {
                 JOptionPane.showMessageDialog(null, e);
@@ -224,6 +217,7 @@ public class Home1 extends javax.swing.JFrame {
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
+            @Override
             public void run() {
                 try {
                     new Home1().setVisible(true);
@@ -232,6 +226,7 @@ public class Home1 extends javax.swing.JFrame {
                 } catch (ClassNotFoundException ex) {
                     Logger.getLogger(Home1.class.getName()).log(Level.SEVERE, null, ex);
                 }
+                
 
             }
         });
