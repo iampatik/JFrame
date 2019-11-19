@@ -5,6 +5,10 @@
  */
 package JFrame;
 
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 /**
  *
  * @author tancincoja_sd2022
@@ -121,7 +125,17 @@ public class adminView extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void logOutButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_logOutButtonActionPerformed
-        // TODO add your handling code here:
+        this.setVisible(false);
+        Home1 home = null;
+        try {
+            home = new Home1();
+            home.setVisible(true);
+        } catch (SQLException ex) {
+            Logger.getLogger(adminView.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(adminView.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
     }//GEN-LAST:event_logOutButtonActionPerformed
 
     /**

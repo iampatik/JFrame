@@ -5,6 +5,10 @@
  */
 package JFrame;
 
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 /**
  *
  * @author tancincoja_sd2022
@@ -14,9 +18,17 @@ public class customerView extends javax.swing.JFrame {
     /**
      * Creates new form customerView
      */
+    String uname;
+    
     public customerView() {
         initComponents();
         this.setTitle("Menu");
+    }
+    
+    public customerView(String username){
+        initComponents();
+        this.setTitle("Menu");
+        uname = username;
     }
 
     /**
@@ -178,7 +190,17 @@ public class customerView extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void logOutButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_logOutButtonActionPerformed
-        // TODO add your handling code here:
+        this.setVisible(false);
+        Home1 home = null;
+        try {
+            home = new Home1();
+            home.setVisible(true);
+        } catch (SQLException ex) {
+            Logger.getLogger(customerView.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(customerView.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
     }//GEN-LAST:event_logOutButtonActionPerformed
 
     private void payOrderButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_payOrderButtonActionPerformed

@@ -156,7 +156,7 @@ public class logIn extends javax.swing.JFrame {
             Connection con = DriverManager.getConnection("jdbc:mysql://localhost/jframe", "root", "");
             java.sql.Statement stmt = con.createStatement();
             
-            ResultSet rs1 = stmt.executeQuery("SELECT * FROM `admin`  where username = '" + uname + "' and password = '" + pass + "'");
+            ResultSet rs1 = stmt.executeQuery("SELECT * FROM `admin` where username = '" + uname + "' and password = '" + pass + "'");
             
             System.out.println("Running in log in");
             System.out.println("admin!");

@@ -5,10 +5,16 @@
  */
 package JFrame;
 
+import java.awt.HeadlessException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
+import medicineapp.User;
 
 /**
  *
@@ -117,12 +123,11 @@ public class register extends javax.swing.JFrame {
                             .addComponent(ageField, javax.swing.GroupLayout.DEFAULT_SIZE, 321, Short.MAX_VALUE)
                             .addComponent(jLabel7)
                             .addComponent(moneyField, javax.swing.GroupLayout.DEFAULT_SIZE, 321, Short.MAX_VALUE)
-                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                .addComponent(passwordField, javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(usernameField, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 320, Short.MAX_VALUE))
+                            .addComponent(passwordField)
+                            .addComponent(usernameField, javax.swing.GroupLayout.DEFAULT_SIZE, 320, Short.MAX_VALUE)
                             .addComponent(confirmpassField)))
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(165, 165, 165)
+                        .addGap(180, 180, 180)
                         .addComponent(registerSubmitButton, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(99, Short.MAX_VALUE))
         );
@@ -151,9 +156,9 @@ public class register extends javax.swing.JFrame {
                 .addComponent(jLabel7)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(moneyField, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(28, 28, 28)
+                .addGap(18, 18, 18)
                 .addComponent(registerSubmitButton, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(21, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -183,51 +188,107 @@ public class register extends javax.swing.JFrame {
         String pass = passwordField.getText();
         String conpass = confirmpassField.getText();
         String age1 = ageField.getText();
-        int age = Integer.parseInt(age1);
+        //int age = Integer.parseInt(age1);
         String money1 = moneyField.getText();
-        double money = Double.parseDouble(money1);
+        //double money = Double.parseDouble(money1);
 
+        //User user = new User(int id, String username, String password, int age, double money);
         boolean exist = true;
+        boolean passNotEquals = true;
+        Statement stmt = null;
 
         try {
             Class.forName("com.mysql.jdbc.Driver");
             Connection con = DriverManager.getConnection("jdbc:mysql://localhost/jframe", "root", "");
-            java.sql.Statement stmt = con.createStatement();
+            stmt = con.createStatement();
             ResultSet rs = stmt.executeQuery("SELECT * FROM `users`");
+            //ResultSet rs = stmt.executeQuery("SELECT * FROM `users` where username =`" + uname + "`");
             //System.out.println("Running!");
 
+//            if (rs.next()) {
+//                JOptionPane.showMessageDialog(null, "Username already exist!");
+//            }
+//            if (pass.equals(conpass)) {
+//                try {
+//                    int age = Integer.parseInt(age1);
+//                    if (age >= 18) {
+//                        try {
+//                            double money = Double.parseDouble(money1);
+//                            System.out.println("Naa diri ang pag-read");
+//                            String synt = "'" + uname + "','" + pass + "'," + age + "," + money;
+//                            String sql = "INSERT INTO `users`(`username`, `password`, `age`, `money`) VALUES (" + synt + ")";
+//                            stmt.executeUpdate(sql);
+//                            this.dispose();
+//                            Home1 home = new Home1();
+//                            home.setVisible(true);
+//                        } catch (NumberFormatException exception) {
+//                            JOptionPane.showMessageDialog(null, "Invalid input! Money should be a number!");
+//                        }
+//                    } else {
+//                        JOptionPane.showMessageDialog(null, "Age should atleast be 18 or 18 above to register!");
+//                    }
+//                    //System.out.println("the number was: " + extracted);
+//                } catch (NumberFormatException exception) {
+//                    JOptionPane.showMessageDialog(null, "Invalid input! Age should be a number!");
+//                }
+//
+//            } else {
+//                JOptionPane.showMessageDialog(null, "Password did not match!");
+//            }
             while (rs.next()) {
                 if (rs.getString("username").equals(uname)) {
-
                     JOptionPane.showMessageDialog(null, "Username already exist!");
                     break;
                 } else {
-                    exist = false;
+                    if (pass.equals(conpass)) {
+                        try {
+                            int age = Integer.parseInt(age1);
+                            if (age >= 18) {
+                                try {
+                                    double money = Double.parseDouble(money1);
+                                    System.out.println("Naa diri ang pag-read");
+                                    String synt = "'" + uname + "','" + pass + "'," + age + "," + money;
+                                    Statement stmt1 = con.createStatement();
+                                    String sql = "INSERT INTO `users`(`username`, `password`, `age`, `money`) VALUES (" + synt + ")";
+                                    stmt1.executeUpdate(sql);
+                                    this.setVisible(false);
+                                    Home1 home = new Home1();
+                                    home.setVisible(true);
+                                    con.close();
+                                } catch (NumberFormatException exception) {
+                                    JOptionPane.showMessageDialog(null, "Invalid input! Money should be a number!");
 
-                }
+                                }
+                            } else {
+                                JOptionPane.showMessageDialog(null, "Age should atleast be 18 or 18 above to register!");
+                                break;
+                            }
 
-                if (exist == false) {
-                    if (rs.getString("password").equals(conpass)) {
-                        System.out.println("Naa diri ang pag-read");
-                        String synt = "'" + uname + "','" + pass + "'," + age + "," + money;
-                        String sql = "INSERT INTO `users`(`username`, `password`, `age`, `money`) VALUES (" + synt + ")";
-                        stmt.executeUpdate(sql);
-                        this.dispose();
-                        Home1 home = new Home1();
-                        home.setVisible(true);
-                    }
-                    if (rs.getString("password").equals(conpass) == false) {
+                        } catch (NumberFormatException exception) {
+                            JOptionPane.showMessageDialog(null, "Invalid input! Age should be a number!");
+
+                        }
+                    } else {
                         JOptionPane.showMessageDialog(null, "Password did not match!");
-
+                        break;
                     }
-
+                    //exist = false;
                 }
             }
 
-        } catch (Exception e) {
-
+//            }
+        } catch (HeadlessException | ClassNotFoundException | SQLException e) {
             JOptionPane.showMessageDialog(null, "Error while connecting!");
-        }
+            System.out.println(e);
+        } 
+//finally {
+//        if (stmt != null) { try {
+//            stmt.close();
+//            } catch (SQLException ex) {
+//                Logger.getLogger(register.class.getName()).log(Level.SEVERE, null, ex);
+//            }
+}
+    }
 
 
     }//GEN-LAST:event_registerSubmitButtonActionPerformed
