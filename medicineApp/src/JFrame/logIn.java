@@ -155,21 +155,15 @@ public class logIn extends javax.swing.JFrame {
             Class.forName("com.mysql.jdbc.Driver");
             Connection con = DriverManager.getConnection("jdbc:mysql://localhost/jframe", "root", "");
             java.sql.Statement stmt = con.createStatement();
-            ResultSet rs = stmt.executeQuery("SELECT * FROM `users` where username = '" + uname + "' and password = '" + pass + "'");
+            
+            ResultSet rs1 = stmt.executeQuery("SELECT * FROM `admin`  where username = '" + uname + "' and password = '" + pass + "'");
             
             System.out.println("Running in log in");
+            System.out.println("admin!");
+                
             
-            if (rs.next()) {
-                System.out.println("Customer!");
-                System.out.println("Running in customer!");
-                this.setVisible(false);
-                customerView custom = new customerView();
-                custom.setVisible(true);
-                loggedIn = true;
-                JOptionPane.showMessageDialog(null, "Logged in as customer!");
-            } else {
-                System.out.println("admin!");
-                ResultSet rs1 = stmt.executeQuery("SELECT * FROM `admin`  where username = '" + uname + "' and password = '" + pass + "'");
+            if (rs1.next()) {
+                
 //                while (rs1.next()) {
                 System.out.println("Running in admin!");
 //                    if (rs1.getString("username").equals(uname) && rs1.getString("password").equals(pass)) {
@@ -181,6 +175,15 @@ public class logIn extends javax.swing.JFrame {
 //                        break;
 //                    }
 //                }
+            } else {
+                ResultSet rs = stmt.executeQuery("SELECT * FROM `users` where username = '" + uname + "' and password = '" + pass + "'");
+                System.out.println("Customer!");
+                System.out.println("Running in customer!");
+                this.setVisible(false);
+                customerView custom = new customerView();
+                custom.setVisible(true);
+                loggedIn = true;
+                JOptionPane.showMessageDialog(null, "Logged in as customer!");
             }
 
             if (loggedIn == false) {
