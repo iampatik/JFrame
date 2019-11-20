@@ -140,21 +140,17 @@ public class Home1 extends javax.swing.JFrame {
                 System.out.println("Run");
 
                 for (int i = 0; i < userList.size(); i++) {
-                    //System.out.println("Running");
                     if (userList.get(i).getUserName().equals("Admin")) {
                         System.out.println("Going to update");
                         String syntax = userList.get(i).getUserName() + "','" + userList.get(i).getPassWord();
                         String sql = "INSERT INTO `admin`(`username`, `password`) VALUES ('" + syntax + "')";
                         stmt.executeUpdate(sql);
-                        System.out.println("Updated!");
 
                     } else {
                         System.out.println("Naa diri ang pag-read");
                         String synt = "'" + userList.get(i).getUserName() + "','" + userList.get(i).getPassWord() + "'," + Integer.toString(userList.get(i).getAge()) + "," + Double.toString(userList.get(i).getMoney());
                         String sql = "INSERT INTO `users`(`username`, `password`, `age`, `money`) VALUES (" + synt + ")";
                         stmt.executeUpdate(sql);
-
-                        //System.out.println("Inserted!");
 
                     }
                 }
@@ -163,8 +159,6 @@ public class Home1 extends javax.swing.JFrame {
                     //System.out.println("Running from medicine");
                     String med = "INSERT INTO `medicine`( `genericname`, `brandname`, `medicinetype`, `price`, `stock`) VALUES ('" + medList.get(i).getGenericName() + "','" + medList.get(i).getBrandName() + "','" + medList.get(i).getMedicineType() + "','" + String.valueOf(medList.get(i).getPrice()) + "','" + String.valueOf(medList.get(i).getStock()) + "')";
                     stmt.executeUpdate(med);
-
-                    //ResultSet rs = stmt.executeUpdate(med);
                 }
                 //con.close();
 

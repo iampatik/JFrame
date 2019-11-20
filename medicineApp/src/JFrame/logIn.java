@@ -164,23 +164,18 @@ public class logIn extends javax.swing.JFrame {
             
             if (rs1.next()) {
                 
-//                while (rs1.next()) {
                 System.out.println("Running in admin!");
-//                    if (rs1.getString("username").equals(uname) && rs1.getString("password").equals(pass)) {
                 this.setVisible(false);
                 adminView admin = new adminView();
                 admin.setVisible(true);
                 loggedIn = true;
                 JOptionPane.showMessageDialog(null, "Logged in as administrator!");
-//                        break;
-//                    }
-//                }
             } else {
                 ResultSet rs = stmt.executeQuery("SELECT * FROM `users` where username = '" + uname + "' and password = '" + pass + "'");
                 System.out.println("Customer!");
                 System.out.println("Running in customer!");
                 this.setVisible(false);
-                customerView custom = new customerView();
+                customerView custom = new customerView(uname);
                 custom.setVisible(true);
                 loggedIn = true;
                 JOptionPane.showMessageDialog(null, "Logged in as customer!");

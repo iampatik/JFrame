@@ -5,9 +5,14 @@
  */
 package JFrame;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -79,6 +84,16 @@ public class customerView extends javax.swing.JFrame {
 
         viewBalanceButton.setFont(new java.awt.Font("Serif", 1, 18)); // NOI18N
         viewBalanceButton.setText("View Balance");
+        viewBalanceButton.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                viewBalanceButtonMouseClicked(evt);
+            }
+        });
+        viewBalanceButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                viewBalanceButtonActionPerformed(evt);
+            }
+        });
 
         orderButton.setFont(new java.awt.Font("Serif", 1, 18)); // NOI18N
         orderButton.setText("Order");
@@ -212,7 +227,9 @@ public class customerView extends javax.swing.JFrame {
     }//GEN-LAST:event_viewOrdersButtonActionPerformed
 
     private void depositButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_depositButtonActionPerformed
-        // TODO add your handling code here:
+        this.dispose();
+        depositView dep = new depositView();
+        dep.setVisible(true);
     }//GEN-LAST:event_depositButtonActionPerformed
 
     private void orderButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_orderButtonActionPerformed
@@ -222,6 +239,26 @@ public class customerView extends javax.swing.JFrame {
     private void changePassButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_changePassButtonActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_changePassButtonActionPerformed
+
+    private void viewBalanceButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_viewBalanceButtonActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_viewBalanceButtonActionPerformed
+
+    private void viewBalanceButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_viewBalanceButtonMouseClicked
+        try{
+            Class.forName("com.mysql.jdbc.Driver");
+            Connection con = DriverManager.getConnection("jdbc:mysql://localhost/jframe", "root", "");
+            Statement stmt = con.createStatement();
+            ResultSet rs = stmt.executeQuery("SELECT * FROM `users` WHERE username='"+uname+"'");
+            if(rs.next()){
+                JOptionPane.showMessageDialog(null, "Your balance is: "+rs.getDouble("money")); 
+            }
+            
+            con.close(); 
+        } catch(Exception e){
+            JOptionPane.showMessageDialog(null, "Error!");
+        }
+    }//GEN-LAST:event_viewBalanceButtonMouseClicked
 
     /**
      * @param args the command line arguments

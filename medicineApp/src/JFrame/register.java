@@ -202,8 +202,53 @@ public class register extends javax.swing.JFrame {
             Connection con = DriverManager.getConnection("jdbc:mysql://localhost/jframe", "root", "");
             stmt = con.createStatement();
             ResultSet rs = stmt.executeQuery("SELECT * FROM `users`");
-            //ResultSet rs = stmt.executeQuery("SELECT * FROM `users` where username =`" + uname + "`");
-            //System.out.println("Running!");
+            
+            while(rs.next()){
+                if(rs.getString("username").equals(uname)){
+                    JOptionPane.showMessageDialog(null, "Username already exist!");
+                }
+                else {
+                    if(pass.equals(conpass)){
+                        try {
+                            int age = Integer.parseInt(age1);
+                            if(age >=18){
+                                try{
+                                    double money = Double.parseDouble(money1);
+                                    String synt = "'" + uname + "','" + pass + "'," + age + "," + money;
+                                    String sql = "INSERT INTO `users`(`username`, `password`, `age`, `money`) VALUES (" + synt + ")";
+                                    stmt.executeUpdate(sql);
+                                    JOptionPane.showMessageDialog(null, "Registered!");
+                                    
+                                    Home1 home = new Home1();
+                                    home.setVisible(true);
+                                    this.dispose();
+                                    System.out.println("Successfully processed!");
+                                    break;
+                                    
+                                } catch(Exception e){
+                                    JOptionPane.showMessageDialog(null, "Money should be a number!");
+                                    break;
+                                }
+                            }
+                            else {
+                                JOptionPane.showMessageDialog(null, "Age should be atleast 18 or above!");
+                                break;
+                            }
+                            
+                        
+                        } catch(Exception e){
+                            JOptionPane.showMessageDialog(null, "Age should be a number!");
+                            break;
+                        }
+                    }
+                    else {
+                        JOptionPane.showMessageDialog(null, "Password did not match!");
+                        break;
+                    }
+                }
+            }
+            
+            
 
 //            if (rs.next()) {
 //                JOptionPane.showMessageDialog(null, "Username already exist!");
@@ -235,60 +280,50 @@ public class register extends javax.swing.JFrame {
 //            } else {
 //                JOptionPane.showMessageDialog(null, "Password did not match!");
 //            }
-            while (rs.next()) {
-                if (rs.getString("username").equals(uname)) {
-                    JOptionPane.showMessageDialog(null, "Username already exist!");
-                    break;
-                } else {
-                    if (pass.equals(conpass)) {
-                        try {
-                            int age = Integer.parseInt(age1);
-                            if (age >= 18) {
-                                try {
-                                    double money = Double.parseDouble(money1);
-                                    System.out.println("Naa diri ang pag-read");
-                                    String synt = "'" + uname + "','" + pass + "'," + age + "," + money;
-                                    Statement stmt1 = con.createStatement();
-                                    String sql = "INSERT INTO `users`(`username`, `password`, `age`, `money`) VALUES (" + synt + ")";
-                                    stmt1.executeUpdate(sql);
-                                    this.setVisible(false);
-                                    Home1 home = new Home1();
-                                    home.setVisible(true);
-                                    con.close();
-                                } catch (NumberFormatException exception) {
-                                    JOptionPane.showMessageDialog(null, "Invalid input! Money should be a number!");
-
-                                }
-                            } else {
-                                JOptionPane.showMessageDialog(null, "Age should atleast be 18 or 18 above to register!");
-                                break;
-                            }
-
-                        } catch (NumberFormatException exception) {
-                            JOptionPane.showMessageDialog(null, "Invalid input! Age should be a number!");
-
-                        }
-                    } else {
-                        JOptionPane.showMessageDialog(null, "Password did not match!");
-                        break;
-                    }
-                    //exist = false;
-                }
-            }
-
+//            while (rs.next()) {
+//                if (rs.getString("username").equals(uname)) {
+//                    JOptionPane.showMessageDialog(null, "Username already exist!");
+//                    break;
+//                } else {
+//                    if (pass.equals(conpass)) {
+//                        try {
+//                            int age = Integer.parseInt(age1);
+//                            if (age >= 18) {
+//                                try {
+//                                    double money = Double.parseDouble(money1);
+//                                    System.out.println("Naa diri ang pag-read");
+//                                    String synt = "'" + uname + "','" + pass + "'," + age + "," + money;
+//                                    Statement stmt1 = con.createStatement();
+//                                    String sql = "INSERT INTO `users`(`username`, `password`, `age`, `money`) VALUES (" + synt + ")";
+//                                    stmt1.executeUpdate(sql);
+//                                    this.setVisible(false);
+//                                    Home1 home = new Home1();
+//                                    home.setVisible(true);
+//                                    con.close();
+//                                } catch (NumberFormatException exception) {
+//                                    JOptionPane.showMessageDialog(null, "Invalid input! Money should be a number!");
+//
+//                                }
+//                            } else {
+//                                JOptionPane.showMessageDialog(null, "Age should atleast be 18 or 18 above to register!");
+//                                break;
+//                            }
+//
+//                        } catch (NumberFormatException exception) {
+//                            JOptionPane.showMessageDialog(null, "Invalid input! Age should be a number!");
+//
+//                        }
+//                    } else {
+//                        JOptionPane.showMessageDialog(null, "Password did not match!");
+//                        break;
+//                    }
+//                }
 //            }
+            con.close();
         } catch (HeadlessException | ClassNotFoundException | SQLException e) {
             JOptionPane.showMessageDialog(null, "Error while connecting!");
             System.out.println(e);
         } 
-//finally {
-//        if (stmt != null) { try {
-//            stmt.close();
-//            } catch (SQLException ex) {
-//                Logger.getLogger(register.class.getName()).log(Level.SEVERE, null, ex);
-//            }
-}
-    }
 
 
     }//GEN-LAST:event_registerSubmitButtonActionPerformed
