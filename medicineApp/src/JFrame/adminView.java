@@ -18,6 +18,9 @@ public class adminView extends javax.swing.JFrame {
     /**
      * Creates new form adminView
      */
+    
+    String uname = "Admin";
+    
     public adminView() {
         initComponents();
         this.setTitle("Menu");
@@ -38,7 +41,6 @@ public class adminView extends javax.swing.JFrame {
         removeMedButton = new javax.swing.JButton();
         displayMedButton = new javax.swing.JButton();
         viewOrderButton = new javax.swing.JButton();
-        changePassButton = new javax.swing.JButton();
         logOutButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -49,18 +51,35 @@ public class adminView extends javax.swing.JFrame {
 
         addMedButton.setFont(new java.awt.Font("Serif", 1, 24)); // NOI18N
         addMedButton.setText("Add Medicine");
+        addMedButton.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                addMedButtonMouseClicked(evt);
+            }
+        });
 
         removeMedButton.setFont(new java.awt.Font("Serif", 1, 24)); // NOI18N
         removeMedButton.setText("Remove Medicine");
+        removeMedButton.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                removeMedButtonMouseClicked(evt);
+            }
+        });
 
         displayMedButton.setFont(new java.awt.Font("Serif", 1, 24)); // NOI18N
         displayMedButton.setText("Display Medicine");
+        displayMedButton.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                displayMedButtonMouseClicked(evt);
+            }
+        });
 
         viewOrderButton.setFont(new java.awt.Font("Serif", 1, 24)); // NOI18N
-        viewOrderButton.setText("View Order");
-
-        changePassButton.setFont(new java.awt.Font("Serif", 1, 24)); // NOI18N
-        changePassButton.setText("Change Password");
+        viewOrderButton.setText("View Orders");
+        viewOrderButton.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                viewOrderButtonMouseClicked(evt);
+            }
+        });
 
         logOutButton.setFont(new java.awt.Font("Serif", 1, 24)); // NOI18N
         logOutButton.setText("Log Out");
@@ -76,38 +95,36 @@ public class adminView extends javax.swing.JFrame {
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                        .addComponent(logOutButton, javax.swing.GroupLayout.PREFERRED_SIZE, 215, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(changePassButton, javax.swing.GroupLayout.PREFERRED_SIZE, 215, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(viewOrderButton, javax.swing.GroupLayout.PREFERRED_SIZE, 215, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(displayMedButton, javax.swing.GroupLayout.PREFERRED_SIZE, 215, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(removeMedButton)
-                        .addGroup(jPanel1Layout.createSequentialGroup()
-                            .addGap(147, 147, 147)
-                            .addComponent(addMedButton, javax.swing.GroupLayout.PREFERRED_SIZE, 215, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(147, 147, 147)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(logOutButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(viewOrderButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(displayMedButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(removeMedButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(addMedButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(204, 204, 204)
-                        .addComponent(jLabel1)))
-                .addContainerGap(150, Short.MAX_VALUE))
+                        .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGap(69, 69, 69)))
+                .addGap(150, 150, 150))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jLabel1)
+                .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGap(26, 26, 26)
-                .addComponent(addMedButton)
+                .addComponent(addMedButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(removeMedButton)
+                .addComponent(removeMedButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(displayMedButton, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(displayMedButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(viewOrderButton)
+                .addComponent(viewOrderButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(changePassButton)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(logOutButton)
-                .addContainerGap(43, Short.MAX_VALUE))
+                .addComponent(logOutButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGap(90, 90, 90))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -130,13 +147,37 @@ public class adminView extends javax.swing.JFrame {
         try {
             home = new Home1();
             home.setVisible(true);
-        } catch (SQLException ex) {
-            Logger.getLogger(adminView.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (ClassNotFoundException ex) {
+        } catch (SQLException | ClassNotFoundException ex) {
             Logger.getLogger(adminView.class.getName()).log(Level.SEVERE, null, ex);
         }
         
     }//GEN-LAST:event_logOutButtonActionPerformed
+
+    private void addMedButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_addMedButtonMouseClicked
+        this.dispose();
+        new addMedicineView().setVisible(true);
+        
+        
+        
+    }//GEN-LAST:event_addMedButtonMouseClicked
+
+    private void removeMedButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_removeMedButtonMouseClicked
+        this.dispose();
+        new removeMedicineView().setVisible(true);
+        
+        
+        
+    }//GEN-LAST:event_removeMedButtonMouseClicked
+
+    private void displayMedButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_displayMedButtonMouseClicked
+        this.dispose();
+        new viewMedTable(uname).setVisible(true);
+    }//GEN-LAST:event_displayMedButtonMouseClicked
+
+    private void viewOrderButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_viewOrderButtonMouseClicked
+        this.dispose();
+        new ordersView(uname).setVisible(true);
+    }//GEN-LAST:event_viewOrderButtonMouseClicked
 
     /**
      * @param args the command line arguments
@@ -167,6 +208,7 @@ public class adminView extends javax.swing.JFrame {
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
+            @Override
             public void run() {
                 new adminView().setVisible(true);
             }
@@ -175,7 +217,6 @@ public class adminView extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addMedButton;
-    private javax.swing.JButton changePassButton;
     private javax.swing.JButton displayMedButton;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;

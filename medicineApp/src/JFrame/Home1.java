@@ -5,7 +5,6 @@
  */
 package JFrame;
 
-import javax.swing.JFrame;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.logging.Level;
@@ -18,19 +17,19 @@ import medicineapp.*;
  *
  * @author 2ndyrGroupB
  */
-public class Home1 extends javax.swing.JFrame {
+public final class Home1 extends javax.swing.JFrame {
 
     /**
      * Creates new form Home1
      */
-    ArrayList<User> userList = new ArrayList<User>();
-    ArrayList<Medicine> medList = new ArrayList<Medicine>();
+    ArrayList<User> userList = new ArrayList<>();
+    ArrayList<Medicine> medList = new ArrayList<>();
     int count = 0;
 
     public Home1() throws SQLException, ClassNotFoundException {
         initComponents();
         this.setTitle("Home");
-        this.created();
+//        this.created();
     }
 
     /**
@@ -111,63 +110,64 @@ public class Home1 extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    public void created() throws SQLException, ClassNotFoundException {
-        userList.add(new Adult(1, "Patchan", "Gwapoako", 19, 1000));
-        userList.add(new Adult(2, "Patrick", "Pogiako", 19, 5000));
-        userList.add(new SeniorCitizen(3, "Patik", "P@ssw0rd", 62, 5000));
-        userList.add(new User("Admin", "Admin"));
-        medList.add(new BodyPain(1, "Ibuprofen + Paracetamol", "Alaxan", "Body Pain", 8.25, 100));
-        medList.add(new BodyPain(2, "Paracetamol Caffeine", "Rexidol", "Body Pain", 15.50, 75));
-        medList.add(new BodyPain(3, "Ibuprofen", "Medicol Advance", "Body Pain", 6.00, 100));
-        medList.add(new Allergies(4, "Cetirizine", "Allerkid", "Allergies", 8, 50));
-        medList.add(new Allergies(5, "Loratadine", "Allerta", "Allergies", 16, 50));
-        medList.add(new Allergies(6, "Mometasone Furoate", "Allerta Dermatec", "Allergies", 24, 50));
-        medList.add(new Cough(7, "Carbocisteine", "Solmux", "Cough", 17, 50));
-        medList.add(new Cough(8, "Ambroxol", "Myracof", "Cough", 22, 50));
-        medList.add(new Cough(9, "Ambroxol", "Expel OD", "Cough", 29, 50));
-        medList.add(new Headache(10, "Paracetamol", "Biogesic 325", "Headache", 6, 50));
-        medList.add(new Headache(11, "Paracetamol", "Biogesic", "Headache", 8, 50));
-        medList.add(new Headache(12, "Paracetamol", "UHP Fevertab", "Headache", 5, 50));
-
-        
-        Class.forName("com.mysql.jdbc.Driver");
-        Connection con = DriverManager.getConnection("jdbc:mysql://localhost/jframe", "root", "");
-        java.sql.Statement stmt = con.createStatement();
-        ResultSet rs = stmt.executeQuery("SELECT * FROM `users`");
-
-        while (rs.next() == false) {           
-            try {
-                System.out.println("Run");
-
-                for (int i = 0; i < userList.size(); i++) {
-                    if (userList.get(i).getUserName().equals("Admin")) {
-                        System.out.println("Going to update");
-                        String syntax = userList.get(i).getUserName() + "','" + userList.get(i).getPassWord();
-                        String sql = "INSERT INTO `admin`(`username`, `password`) VALUES ('" + syntax + "')";
-                        stmt.executeUpdate(sql);
-
-                    } else {
-                        System.out.println("Naa diri ang pag-read");
-                        String synt = "'" + userList.get(i).getUserName() + "','" + userList.get(i).getPassWord() + "'," + Integer.toString(userList.get(i).getAge()) + "," + Double.toString(userList.get(i).getMoney());
-                        String sql = "INSERT INTO `users`(`username`, `password`, `age`, `money`) VALUES (" + synt + ")";
-                        stmt.executeUpdate(sql);
-
-                    }
-                }
-
-                for (int i = 0; i < medList.size(); i++) {
-                    //System.out.println("Running from medicine");
-                    String med = "INSERT INTO `medicine`( `genericname`, `brandname`, `medicinetype`, `price`, `stock`) VALUES ('" + medList.get(i).getGenericName() + "','" + medList.get(i).getBrandName() + "','" + medList.get(i).getMedicineType() + "','" + String.valueOf(medList.get(i).getPrice()) + "','" + String.valueOf(medList.get(i).getStock()) + "')";
-                    stmt.executeUpdate(med);
-                }
-                //con.close();
-
-            } catch (Exception e) {
-                JOptionPane.showMessageDialog(null, e);
-            }
-        }
-
-    }
+//    public void created() throws SQLException, ClassNotFoundException {
+//        userList.add(new Adult(1, "Patchan", "Gwapoako", 19, 1000));
+//        userList.add(new Adult(2, "Patrick", "Pogiako", 19, 5000));
+//        userList.add(new SeniorCitizen(3, "Patik", "P@ssw0rd", 62, 5000));
+//        userList.add(new User("Admin", "Admin"));
+//        medList.add(new BodyPain(1, "Ibuprofen + Paracetamol", "Alaxan", "Body Pain", 8.25, 100));
+//        medList.add(new BodyPain(2, "Paracetamol Caffeine", "Rexidol", "Body Pain", 15.50, 75));
+//        medList.add(new BodyPain(3, "Ibuprofen", "Medicol Advance", "Body Pain", 6.00, 100));
+//        medList.add(new Allergies(4, "Cetirizine", "Allerkid", "Allergies", 8, 50));
+//        medList.add(new Allergies(5, "Loratadine", "Allerta", "Allergies", 16, 50));
+//        medList.add(new Allergies(6, "Mometasone Furoate", "Allerta Dermatec", "Allergies", 24, 50));
+//        medList.add(new Cough(7, "Carbocisteine", "Solmux", "Cough", 17, 50));
+//        medList.add(new Cough(8, "Ambroxol", "Myracof", "Cough", 22, 50));
+//        medList.add(new Cough(9, "Ambroxol", "Expel OD", "Cough", 29, 50));
+//        medList.add(new Headache(10, "Paracetamol", "Biogesic 325", "Headache", 6, 50));
+//        medList.add(new Headache(11, "Paracetamol", "Biogesic", "Headache", 8, 50));
+//        medList.add(new Headache(12, "Paracetamol", "UHP Fevertab", "Headache", 5, 50));
+//
+//        
+//        
+//        
+//        Class.forName("com.mysql.jdbc.Driver");
+//        Connection con = DriverManager.getConnection("jdbc:mysql://localhost/jframe", "root", "");
+//        java.sql.Statement stmt = con.createStatement();
+//        ResultSet rs = stmt.executeQuery("SELECT * FROM `users`");
+//
+//        while (rs.next() == false) {           
+//            try {
+//                System.out.println("Run");
+//
+//                for (int i = 0; i < userList.size(); i++) {
+//                    if (userList.get(i).getUserName().equals("Admin")) {
+//                        System.out.println("Going to update");
+//                        String syntax = userList.get(i).getUserName() + "','" + userList.get(i).getPassWord();
+//                        String sql = "INSERT INTO `admin`(`username`, `password`) VALUES ('" + syntax + "')";
+//                        stmt.executeUpdate(sql);
+//
+//                    } else {
+//                        System.out.println("Naa diri ang pag-read");
+//                        String synt = "'" + userList.get(i).getUserName() + "','" + userList.get(i).getPassWord() + "'," + Integer.toString(userList.get(i).getAge()) + "," + Double.toString(userList.get(i).getMoney());
+//                        String sql = "INSERT INTO `users`(`username`, `password`, `age`, `money`) VALUES (" + synt + ")";
+//                        stmt.executeUpdate(sql);
+//
+//                    }
+//                }
+//                for (int i = 0; i < medList.size(); i++) {
+//                    //System.out.println("Running from medicine");
+//                    String med = "INSERT INTO `medicine`( `genericname`, `brandname`, `medicinetype`, `price`, `stock`) VALUES ('" + medList.get(i).getGenericName() + "','" + medList.get(i).getBrandName() + "','" + medList.get(i).getMedicineType() + "','" + String.valueOf(medList.get(i).getPrice()) + "','" + String.valueOf(medList.get(i).getStock()) + "')";
+//                    stmt.executeUpdate(med);
+//                }
+//                //con.close();
+//
+//            } catch (Exception e) {
+//                JOptionPane.showMessageDialog(null, e);
+//            }
+//        }
+//
+//    }
 
 
     private void logInButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_logInButtonMouseClicked

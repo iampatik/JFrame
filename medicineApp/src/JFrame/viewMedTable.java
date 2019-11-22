@@ -44,26 +44,22 @@ public class viewMedTable extends javax.swing.JFrame {
 //        String stock = medicineTable.getColumnName(6);
         
         
-        try{
-            Class.forName("com.mysql.jdbc.Driver");
-            Connection con = DriverManager.getConnection("jdbc:mysql://localhost/jframe", "root", "");
-            Statement stmt = con.createStatement();
-            ResultSet rs = stmt.executeQuery("SELECT * FROM `medicine`");
-            DefaultTableModel tm = (DefaultTableModel)medicineTable.getModel();
-            tm.setRowCount(0);
-            
-            while(rs.next()){
-                System.out.println("Basa ikaw!");
-                Object table[] = {rs.getInt("id"),rs.getString("genericname"),rs.getString("brandname"),rs.getString("medicinetype"),rs.getDouble("price"),rs.getInt("stock")};
-                tm.addRow(table);
-            }
-            
-            
-            
-        
-        }catch(Exception e){     
-            JOptionPane.showMessageDialog(null, "Error connecting to database!");
-        }
+//        try{
+//            Class.forName("com.mysql.jdbc.Driver");
+//            Connection con = DriverManager.getConnection("jdbc:mysql://localhost/jframe", "root", "");
+//            Statement stmt = con.createStatement();
+//            ResultSet rs = stmt.executeQuery("SELECT * FROM `medicine`");
+//            DefaultTableModel tm = (DefaultTableModel)medicineTable.getModel();
+//            tm.setRowCount(0);
+//            
+//            while(rs.next()){
+//                System.out.println("Basa ikaw!");
+//                Object table[] = {rs.getInt("id"),rs.getString("genericname"),rs.getString("brandname"),rs.getString("medicinetype"),rs.getDouble("price"),rs.getInt("stock")};
+//                tm.addRow(table);
+//            }
+//        }catch(Exception e){     
+//            JOptionPane.showMessageDialog(null, "Error connecting to database!");
+//        }
         
         
 
@@ -85,6 +81,7 @@ public class viewMedTable extends javax.swing.JFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         medicineTable = new javax.swing.JTable();
         goBackButton = new javax.swing.JButton();
+        viewButton = new javax.swing.JButton();
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -163,6 +160,19 @@ public class viewMedTable extends javax.swing.JFrame {
             }
         });
 
+        viewButton.setFont(new java.awt.Font("Serif", 1, 24)); // NOI18N
+        viewButton.setText("View");
+        viewButton.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                viewButtonMouseClicked(evt);
+            }
+        });
+        viewButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                viewButtonActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -174,6 +184,10 @@ public class viewMedTable extends javax.swing.JFrame {
                 .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGap(145, 145, 145))
             .addComponent(jScrollPane1)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGap(191, 191, 191)
+                .addComponent(viewButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGap(214, 214, 214))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -183,7 +197,10 @@ public class viewMedTable extends javax.swing.JFrame {
                     .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(goBackButton))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 343, Short.MAX_VALUE))
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 332, Short.MAX_VALUE)
+                .addGap(39, 39, 39)
+                .addComponent(viewButton, javax.swing.GroupLayout.DEFAULT_SIZE, 52, Short.MAX_VALUE)
+                .addGap(26, 26, 26))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -206,9 +223,39 @@ public class viewMedTable extends javax.swing.JFrame {
 
     private void goBackButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_goBackButtonMouseClicked
         this.dispose();
-        customerView custom = new customerView(uname);
-        custom.setVisible(true);
+        if(uname.equals("Admin")){
+            adminView admin = new adminView();
+            admin.setVisible(true);
+        } else {
+            customerView custom = new customerView(uname);
+            custom.setVisible(true);
+        }        
+        
+        
     }//GEN-LAST:event_goBackButtonMouseClicked
+
+    private void viewButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_viewButtonActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_viewButtonActionPerformed
+
+    private void viewButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_viewButtonMouseClicked
+        try{
+            Class.forName("com.mysql.jdbc.Driver");
+            Connection con = DriverManager.getConnection("jdbc:mysql://localhost/jframe", "root", "");
+            Statement stmt = con.createStatement();
+            ResultSet rs = stmt.executeQuery("SELECT * FROM `medicine`");
+            DefaultTableModel tm = (DefaultTableModel)medicineTable.getModel();
+            tm.setRowCount(0);
+            
+            while(rs.next()){
+                System.out.println("Basa ikaw!");
+                Object table[] = {rs.getInt("id"),rs.getString("genericname"),rs.getString("brandname"),rs.getString("medicinetype"),rs.getDouble("price"),rs.getInt("stock")};
+                tm.addRow(table);
+            }
+        }catch(Exception e){     
+            JOptionPane.showMessageDialog(null, "Error connecting to database!");
+        }
+    }//GEN-LAST:event_viewButtonMouseClicked
 
     /**
      * @param args the command line arguments
@@ -255,5 +302,6 @@ public class viewMedTable extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable medicineTable;
+    private javax.swing.JButton viewButton;
     // End of variables declaration//GEN-END:variables
 }
