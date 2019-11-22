@@ -218,6 +218,10 @@ public class removeMedicineView extends javax.swing.JFrame {
                 JOptionPane.showMessageDialog(null, "Brand name do not exist!");
             } else {
                 String sql = "DELETE FROM `medicine` WHERE brandname='"+bname+"'";
+                stmt.executeUpdate(sql);
+                JOptionPane.showMessageDialog(null, "Successfully removed!");
+                this.dispose();
+                new adminView().setVisible(true);
             }
             
             
