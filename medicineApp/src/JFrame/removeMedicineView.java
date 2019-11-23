@@ -5,6 +5,7 @@
  */
 package JFrame;
 
+import java.awt.HeadlessException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -62,7 +63,15 @@ public class removeMedicineView extends javax.swing.JFrame {
             new String [] {
                 "ID", "Generic Name", "Brand Name", "Medicine Type", "Price", "Stock"
             }
-        ));
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
         jScrollPane1.setViewportView(medTable);
 
         jLabel1.setFont(new java.awt.Font("Serif", 1, 18)); // NOI18N
@@ -184,50 +193,56 @@ public class removeMedicineView extends javax.swing.JFrame {
     }//GEN-LAST:event_cancelButtonMouseClicked
 
     private void jButton1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton1MouseClicked
-        try{
+        try {
             Class.forName("com.mysql.jdbc.Driver");
             Connection con = DriverManager.getConnection("jdbc:mysql://localhost/jframe", "root", "");
             Statement stmt = con.createStatement();
             ResultSet rs = stmt.executeQuery("SELECT * FROM `medicine`");
-            DefaultTableModel tm = (DefaultTableModel)medTable.getModel();
+            DefaultTableModel tm = (DefaultTableModel) medTable.getModel();
             tm.setRowCount(0);
-            
-            while(rs.next()){
-                System.out.println("Basa ikaw!");
-                Object table[] = {rs.getInt("id"),rs.getString("genericname"),rs.getString("brandname"),rs.getString("medicinetype"),rs.getDouble("price"),rs.getInt("stock")};
+
+            while (rs.next()) {
+                Object table[] = {rs.getInt("id"), rs.getString("genericname"), rs.getString("brandname"), rs.getString("medicinetype"), rs.getDouble("price"), rs.getInt("stock")};
                 tm.addRow(table);
             }
-        }catch(ClassNotFoundException | SQLException e){     
+        } catch (ClassNotFoundException | SQLException e) {
             JOptionPane.showMessageDialog(null, "Error connecting to database!");
         }
-        
-        
-        
+
+
     }//GEN-LAST:event_jButton1MouseClicked
 
     private void removeButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_removeButtonMouseClicked
         String bname = inputName.getText();
-        
-        try{
+        boolean exist = false;
+
+        try {
             Class.forName("com.mysql.jdbc.Driver");
             Connection con = DriverManager.getConnection("jdbc:mysql://localhost/jframe", "root", "");
             Statement stmt = con.createStatement();
-            ResultSet rs = stmt.executeQuery("SELECT * FROM `medicine` WHERE brandname='"+bname+"'");
-            
-            if(rs.next()){
-                JOptionPane.showMessageDialog(null, "Brand name do not exist!");
-            } else {
-                String sql = "DELETE FROM `medicine` WHERE brandname='"+bname+"'";
-                stmt.executeUpdate(sql);
-                JOptionPane.showMessageDialog(null, "Successfully removed!");
-                this.dispose();
-                new adminView().setVisible(true);
+            ResultSet rs = stmt.executeQuery("SELECT * FROM `medicine` WHERE brandname='" + bname + "'");
+
+            while (rs.next()) {
+                if (rs.getString("brandname").equals(bname)) {
+                    try {
+                        exist = true;
+                        String sql = "DELETE FROM `medicine` WHERE brandname='" + bname + "'";
+                        stmt.executeUpdate(sql);
+                        JOptionPane.showMessageDialog(null, "Successfully removed!");
+                        this.dispose();
+                        new adminView().setVisible(true);  
+                        break;
+                    } catch (HeadlessException | SQLException e) {
+                        JOptionPane.showMessageDialog(null, "Error removing!!");
+                    }
+                }                              
+            }
+            if(exist == false){
+                JOptionPane.showMessageDialog(null, "Brand name do not exist!");                
             }
             
-            
-        } catch(ClassNotFoundException | SQLException e) {
-            JOptionPane.showMessageDialog(null, "Error!");
-        
+        } catch (HeadlessException | ClassNotFoundException | SQLException e) {
+            JOptionPane.showMessageDialog(null, "Error connecting!!");
         }
     }//GEN-LAST:event_removeButtonMouseClicked
 

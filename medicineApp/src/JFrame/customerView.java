@@ -5,6 +5,7 @@
  */
 package JFrame;
 
+import java.awt.HeadlessException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -110,6 +111,11 @@ public class customerView extends javax.swing.JFrame {
 
         viewMedicinesButton.setFont(new java.awt.Font("Serif", 1, 18)); // NOI18N
         viewMedicinesButton.setText("View Medicines");
+        viewMedicinesButton.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                viewMedicinesButtonMouseClicked(evt);
+            }
+        });
 
         viewOrdersButton.setFont(new java.awt.Font("Serif", 1, 18)); // NOI18N
         viewOrdersButton.setText("View Orders");
@@ -126,6 +132,11 @@ public class customerView extends javax.swing.JFrame {
 
         payOrderButton.setFont(new java.awt.Font("Serif", 1, 18)); // NOI18N
         payOrderButton.setText("Pay Order");
+        payOrderButton.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                payOrderButtonMouseClicked(evt);
+            }
+        });
         payOrderButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 payOrderButtonActionPerformed(evt);
@@ -189,7 +200,7 @@ public class customerView extends javax.swing.JFrame {
                     .addComponent(orderButton, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(changePassButton, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(30, 30, 30)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(viewMedicinesButton, javax.swing.GroupLayout.DEFAULT_SIZE, 53, Short.MAX_VALUE)
                     .addComponent(logOutButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(100, 100, 100))
@@ -238,7 +249,7 @@ public class customerView extends javax.swing.JFrame {
 
     private void depositButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_depositButtonActionPerformed
         this.dispose();
-        depositView dep = new depositView();
+        depositView dep = new depositView(uname);
         dep.setVisible(true);
     }//GEN-LAST:event_depositButtonActionPerformed
 
@@ -265,7 +276,7 @@ public class customerView extends javax.swing.JFrame {
             }
             
             con.close(); 
-        } catch(Exception e){
+        } catch(HeadlessException | ClassNotFoundException | SQLException e){
             JOptionPane.showMessageDialog(null, "Error!");
         }
     }//GEN-LAST:event_viewBalanceButtonMouseClicked
@@ -280,6 +291,16 @@ public class customerView extends javax.swing.JFrame {
         this.dispose();
         new ordersView(uname).setVisible(true);
     }//GEN-LAST:event_viewOrdersButtonMouseClicked
+
+    private void viewMedicinesButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_viewMedicinesButtonMouseClicked
+        this.dispose();
+        new viewMedTable(uname).setVisible(true);
+    }//GEN-LAST:event_viewMedicinesButtonMouseClicked
+
+    private void payOrderButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_payOrderButtonMouseClicked
+        this.dispose();
+        new payOrder(uname).setVisible(true);
+    }//GEN-LAST:event_payOrderButtonMouseClicked
 
     /**
      * @param args the command line arguments

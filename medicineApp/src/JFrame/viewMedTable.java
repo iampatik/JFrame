@@ -131,20 +131,19 @@ public class viewMedTable extends javax.swing.JFrame {
             Class[] types = new Class [] {
                 java.lang.Integer.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.Double.class, java.lang.String.class
             };
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false, false
+            };
 
             public Class getColumnClass(int columnIndex) {
                 return types [columnIndex];
             }
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
         });
         jScrollPane1.setViewportView(medicineTable);
-        if (medicineTable.getColumnModel().getColumnCount() > 0) {
-            medicineTable.getColumnModel().getColumn(0).setHeaderValue("ID");
-            medicineTable.getColumnModel().getColumn(1).setHeaderValue("Generic Name");
-            medicineTable.getColumnModel().getColumn(2).setHeaderValue("Brand Name");
-            medicineTable.getColumnModel().getColumn(3).setHeaderValue("Medicine Type");
-            medicineTable.getColumnModel().getColumn(4).setHeaderValue("Price");
-            medicineTable.getColumnModel().getColumn(5).setHeaderValue("Stock");
-        }
 
         goBackButton.setFont(new java.awt.Font("Serif", 1, 18)); // NOI18N
         goBackButton.setText("Back");
@@ -248,7 +247,6 @@ public class viewMedTable extends javax.swing.JFrame {
             tm.setRowCount(0);
             
             while(rs.next()){
-                System.out.println("Basa ikaw!");
                 Object table[] = {rs.getInt("id"),rs.getString("genericname"),rs.getString("brandname"),rs.getString("medicinetype"),rs.getDouble("price"),rs.getInt("stock")};
                 tm.addRow(table);
             }

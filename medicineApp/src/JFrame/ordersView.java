@@ -61,15 +61,23 @@ public class ordersView extends javax.swing.JFrame {
 
         ordersTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null}
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null}
             },
             new String [] {
-                "ID", "User ID", "Medicine ID", "Ordered Name", "Quantity", "Amount"
+                "ID", "User ID", "Medicine ID", "Ordered Name", "Medicine Type", "Quantity", "Amount"
             }
-        ));
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false, true, false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
         jScrollPane1.setViewportView(ordersTable);
 
         backButton.setFont(new java.awt.Font("Serif", 1, 24)); // NOI18N
@@ -180,23 +188,15 @@ public class ordersView extends javax.swing.JFrame {
                     tm1.setRowCount(0);
                     while(rs1.next()){
                         Object table[] = {rs1.getInt("id"),rs1.getString("username"),rs1.getInt("med_id"),rs1.getString("ordered_name"),rs1.getInt("quantity"),rs1.getDouble("amount")};
-                        tm1.addRow(table);
-                    
+                        tm1.addRow(table);                  
                     }
-                    
-                    
-                }
-                
-                
+                    break;
+                }               
             }
+            con.close();
         }catch(ClassNotFoundException | SQLException e){     
             JOptionPane.showMessageDialog(null, "Error connecting to database!");
-        }
-        
-        
-        
-        
-        
+        }  
     }//GEN-LAST:event_viewButtonMouseClicked
 
     /**

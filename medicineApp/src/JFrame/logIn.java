@@ -5,6 +5,7 @@
  */
 package JFrame;
 
+import java.awt.HeadlessException;
 import java.sql.*;
 import javax.swing.JOptionPane;
 
@@ -155,37 +156,30 @@ public class logIn extends javax.swing.JFrame {
             Class.forName("com.mysql.jdbc.Driver");
             Connection con = DriverManager.getConnection("jdbc:mysql://localhost/jframe", "root", "");
             java.sql.Statement stmt = con.createStatement();
-            
             ResultSet rs1 = stmt.executeQuery("SELECT * FROM `admin` where username = '" + uname + "' and password = '" + pass + "'");
-            
-            System.out.println("Running in log in");
-            System.out.println("admin!");
-                
-            
+
             if (rs1.next()) {
-                
-                System.out.println("Running in admin!");
                 this.setVisible(false);
                 adminView admin = new adminView();
                 admin.setVisible(true);
                 loggedIn = true;
                 JOptionPane.showMessageDialog(null, "Logged in as administrator!");
             } else {
-                ResultSet rs = stmt.executeQuery("SELECT * FROM `users` where username = '" + uname + "' and password = '" + pass + "'");
-                System.out.println("Customer!");
-                System.out.println("Running in customer!");
-                this.setVisible(false);
-                customerView custom = new customerView(uname);
-                custom.setVisible(true);
-                loggedIn = true;
-                JOptionPane.showMessageDialog(null, "Logged in as customer!");
+                ResultSet rs = stmt.executeQuery("SELECT * FROM `users` where username = '" + uname + "'");
+                if (rs.next()) {
+                    if (rs.getString("password").equals(pass)) {
+                        this.setVisible(false);
+                        customerView custom = new customerView(uname);
+                        custom.setVisible(true);
+                        loggedIn = true;
+                        JOptionPane.showMessageDialog(null, "Logged in as customer!");
+                    } 
+                }
             }
-
             if (loggedIn == false) {
                 JOptionPane.showMessageDialog(null, "Invalid Credentials");
             }
-
-        } catch (Exception e) {
+        } catch (HeadlessException | ClassNotFoundException | SQLException e) {
             JOptionPane.showMessageDialog(null, "Error while connecting!");
         }
 

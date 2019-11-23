@@ -163,7 +163,6 @@ public class depositView extends javax.swing.JFrame {
 
     private void depositButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_depositButtonActionPerformed
         String amount1 = amountField.getText();
-        uname = "Patchan";
         Statement stmt = null;
         try {
             Class.forName("com.mysql.jdbc.Driver");

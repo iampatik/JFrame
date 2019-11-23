@@ -100,7 +100,7 @@ public class orderView extends javax.swing.JFrame {
         jScrollPane1.setViewportView(medTable);
 
         medicineLabel.setFont(new java.awt.Font("Serif", 1, 24)); // NOI18N
-        medicineLabel.setText("Enter Medicine ID:");
+        medicineLabel.setText("Enter Brand Name:");
 
         quantityLabel.setFont(new java.awt.Font("Serif", 1, 24)); // NOI18N
         quantityLabel.setText("Enter quantity:");
@@ -159,7 +159,7 @@ public class orderView extends javax.swing.JFrame {
                                 .addGap(57, 57, 57)
                                 .addComponent(cancelButton, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addComponent(quantity, javax.swing.GroupLayout.PREFERRED_SIZE, 382, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addGap(0, 148, Short.MAX_VALUE))
+                .addGap(0, 146, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -221,50 +221,41 @@ public class orderView extends javax.swing.JFrame {
     }//GEN-LAST:event_orderButtonActionPerformed
 
     private void orderButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_orderButtonMouseClicked
-        String medId = medicineId.getText();
+        String bname = medicineId.getText();
         String qty = quantity.getText();
 
         try {
             Class.forName("com.mysql.jdbc.Driver");
             Connection con = DriverManager.getConnection("jdbc:mysql://localhost/jframe", "root", "");
-            Statement stmt = con.createStatement();          
-            ResultSet rs = stmt.executeQuery("SELECT `id` FROM `medicine`");
-            
+            Statement stmt = con.createStatement();
+            ResultSet rs = stmt.executeQuery("SELECT * FROM `medicine` WHERE brandname='" + bname + "'");
+
             while (rs.next()) {
-                try {
-                    int medicine = Integer.parseInt(medId);
-                    if (rs.getInt("id") != medicine) {
-                        JOptionPane.showMessageDialog(null, "Medicine ID do not exist!");
-                        break;
-                    } else {
-                        try {
-                            int pieces = Integer.parseInt(qty);
-                            if (pieces <= rs.getInt("stock")) {
-                                String sql = "INSERT INTO `orders`(`username`, `med_id`, `ordered_name`, `quantity`, `amount`) VALUES ('" + uname + "'," + medicine + ",'" + rs.getString("brandname") + "'," + pieces + "," + (pieces * rs.getDouble("price") + ")");
-                                stmt.executeUpdate(sql);
-                                JOptionPane.showMessageDialog(null, "Ordered successfully!");
-                                this.dispose();
-                                new customerView().setVisible(true);
-                                con.close();
-                            } else {
-                                JOptionPane.showMessageDialog(null, "Insufficient stock to order!");
-                                break;
-                            }
-
-                        } catch (NumberFormatException e) {
-                            JOptionPane.showMessageDialog(null, "Quantity should be a number!");
-
-                        }                       
+                if (rs.getString("brandname").equals(bname)) {
+                    try {
+                        int pieces = Integer.parseInt(qty);
+                        if (pieces <= rs.getInt("stock")) {
+                            String sql = "INSERT INTO `orders` (`username`, `med_id`, `ordered_name`, `med_type`, `quantity`, `amount`) VALUES ('" + uname + "'," + rs.getInt("id") + ",'" + rs.getString("brandname") + "','"+ rs.getString("medicinetype") +"',"+ pieces + "," + (pieces * rs.getDouble("price") + ")");
+                            stmt.executeUpdate(sql);
+                            JOptionPane.showMessageDialog(null, "Ordered successfully!");
+                            this.dispose();
+                            new customerView().setVisible(true);
+                            break;
+                        } else {
+                            JOptionPane.showMessageDialog(null, "Insufficient stock to order!");
+                            break;
+                        }
+                    } catch (NumberFormatException e) {
+                        JOptionPane.showMessageDialog(null, "Quantity should be a number!");
                     }
-                } catch (HeadlessException | NumberFormatException | SQLException e) {
-                    JOptionPane.showMessageDialog(null, "Medicine ID should be a number!");
+                } else {
+                    JOptionPane.showMessageDialog(null, "Medicine do not exist!");
                     break;
-                    
-
                 }
-            }           
-        } catch (Exception e){
-            JOptionPane.showMessageDialog(null, "Error!");
+            }
+            con.close();
+        } catch (HeadlessException | ClassNotFoundException | SQLException e) {
+            JOptionPane.showMessageDialog(null, "Error connecting to database!");
         }
 
 
