@@ -248,25 +248,83 @@ public class payOrder extends javax.swing.JFrame {
                 Class.forName("com.mysql.jdbc.Driver");
                 Connection con = DriverManager.getConnection("jdbc:mysql://localhost/jframe", "root", "");
                 Statement stmt = con.createStatement();
-                ResultSet rs = stmt.executeQuery("SELECT * FROM `orders` id=" + order);
-                
-                if(rs.next()){
-                    ResultSet rs1 = stmt.executeQuery("SELECT * FROM `users` username=" + uname);
-                    if(rs1.next()){
-                        // Continue here!
+                ResultSet rs = stmt.executeQuery("SELECT * FROM `orders` WHERE id=" + order);
+
+                if (rs.next()) {
+                    ResultSet rs1 = stmt.executeQuery("SELECT * FROM `users` WHERE username='" + uname + "'");
+                    if (rs1.next()) {
+                        if (rs1.getInt("age") >= 60) {
+                            ResultSet rs2 = stmt.executeQuery("SELECT * FROM `medicine` WHERE brandname='" + rs.getString("ordered_name") + "'");
+                            double amount = rs.getDouble("amount") * .80;
+                            if (rs2.next()) {
+                                if (rs.getDouble("amount") > rs1.getDouble("money")) {
+                                    JOptionPane.showMessageDialog(null, "Insufficient balance!");
+                                } else if (rs.getDouble("amount") == rs1.getDouble("money")) { // If ordered amount is equal to the money of the person
+                                    double money = 0;
+                                    String sql = "UPDATE `users` SET `money`=" + money + " WHERE username='" + uname + "'";                  
+                                    String sql1 = "UPDATE `medicine` SET `stock`=[value-6] WHERE brandname='" + rs.getString("ordered_name") + "'";
+                                    if(rs.getInt("quantity") < rs2.getInt("stock")){
+                                        JOptionPane.showMessageDialog(null, "Currently can't process order because insufficient of stock! We'll update it later!");
+                                    } else if(rs.getInt("quantity") == rs2.getInt("stock")){ // If stock of the medicine is equal to ordered quantity
+                                        // Updating data in the tables here
+                                        String name = rs2.getString("brandname");
+                                        String sql3 = "DELETE FROM `medicine` WHERE brandname='"+name+"')";
+                                        String sql4 = "UPDATE `users` SET `money`=" + amount + " WHERE username='" + uname + "'";
+                                        String sql5 = "DELETE FROM `orders` WHERE id="+order;
+                                        
+                                        stmt.executeUpdate(sql3);
+                                        stmt.executeUpdate(sql4);
+                                        stmt.executeUpdate(sql5);
+                                        JOptionPane.showMessageDialog(null,"Order is now paid!");
+                                        
+                                    } else {
+                                        // Updating data in the tables here
+                                        String name = rs2.getString("brandname");
+                                        int left = rs2.getInt("stock") - rs.getInt("quantity");
+                                        String sql3 = "UPDATE `medicine` SET `stock="+left +" WHERE brandname='"+name+"')";
+                                        String sql4 = "UPDATE `users` SET `money`=" + amount + " WHERE username='" + uname + "'";
+                                        String sql5 = "DELETE FROM `orders` WHERE id="+order;
+                                        stmt.executeUpdate(sql3);
+                                        stmt.executeUpdate(sql4);
+                                        stmt.executeUpdate(sql5);
+                                        JOptionPane.showMessageDialog(null,"Order is now paid!");
+                                    }
+                                    
+                                } else {
+                                    // If amount is lesser than the user's money
+                                    double money = rs1.getDouble("money") - (rs.getDouble("amount"));
+                                    
+                                    
+                                    
+                                    
+                                }
+                                
+
+                            } else {
+                                // If medicine do not exist!
+                                JOptionPane.showMessageDialog(null, "Medicine do not exist!");
+                            }
+
+                        } else {
+                            // If age is not a senior citizen
+                        }
+
                     }
-                    
+
                 } else {
                     JOptionPane.showMessageDialog(null, "Order ID do not exist!");
                 }
-
+                
+                
+                
+                con.close();
             } catch (ClassNotFoundException | SQLException e) {
                 JOptionPane.showMessageDialog(null, "Error connecting to database!");
 
             }
-
+            
         } catch (HeadlessException | NumberFormatException e) {
-            JOptionPane.showMessageDialog(null,"Order ID should be a number!");
+            JOptionPane.showMessageDialog(null, "Order ID should be a number!");
         }
 
     }//GEN-LAST:event_payButtonMouseClicked

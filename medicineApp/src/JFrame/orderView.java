@@ -239,7 +239,7 @@ public class orderView extends javax.swing.JFrame {
                             stmt.executeUpdate(sql);
                             JOptionPane.showMessageDialog(null, "Ordered successfully!");
                             this.dispose();
-                            new customerView().setVisible(true);
+                            new customerView(uname).setVisible(true);
                             break;
                         } else {
                             JOptionPane.showMessageDialog(null, "Insufficient stock to order!");
