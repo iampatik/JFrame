@@ -164,14 +164,10 @@ public class payOrder extends javax.swing.JFrame {
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 361, Short.MAX_VALUE)
                 .addGap(18, 18, 18)
                 .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(26, 26, 26)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(5, 5, 5)
-                        .addComponent(orderFieldLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(5, 5, 5)
-                        .addComponent(orderField)))
+                .addGap(31, 31, 31)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(orderFieldLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(orderField))
                 .addGap(83, 83, 83)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(payButton, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -257,49 +253,64 @@ public class payOrder extends javax.swing.JFrame {
                             ResultSet rs2 = stmt.executeQuery("SELECT * FROM `medicine` WHERE brandname='" + rs.getString("ordered_name") + "'");
                             double amount = rs.getDouble("amount") * .80;
                             if (rs2.next()) {
-                                if (rs.getDouble("amount") > rs1.getDouble("money")) {
+                                if (rs.getDouble("amount") > rs1.getDouble("money")) { // If amount is greater than the user's money
                                     JOptionPane.showMessageDialog(null, "Insufficient balance!");
                                 } else if (rs.getDouble("amount") == rs1.getDouble("money")) { // If ordered amount is equal to the money of the person
                                     double money = 0;
-                                    String sql = "UPDATE `users` SET `money`=" + money + " WHERE username='" + uname + "'";                  
+                                    String sql = "UPDATE `users` SET `money`=" + money + " WHERE username='" + uname + "'";
                                     String sql1 = "UPDATE `medicine` SET `stock`=[value-6] WHERE brandname='" + rs.getString("ordered_name") + "'";
-                                    if(rs.getInt("quantity") < rs2.getInt("stock")){
+                                    if (rs.getInt("quantity") > rs2.getInt("stock")) { // If the quantity ordered is greater than the stock
                                         JOptionPane.showMessageDialog(null, "Currently can't process order because insufficient of stock! We'll update it later!");
-                                    } else if(rs.getInt("quantity") == rs2.getInt("stock")){ // If stock of the medicine is equal to ordered quantity
+                                    } else if (rs.getInt("quantity") == rs2.getInt("stock")) { // If stock of the medicine is equal to ordered quantity
                                         // Updating data in the tables here
-                                        String name = rs2.getString("brandname");
-                                        String sql3 = "DELETE FROM `medicine` WHERE brandname='"+name+"')";
-                                        String sql4 = "UPDATE `users` SET `money`=" + amount + " WHERE username='" + uname + "'";
-                                        String sql5 = "DELETE FROM `orders` WHERE id="+order;
                                         
+                                        String name = rs2.getString("brandname");
+                                        String sql3 = "DELETE FROM `medicine` WHERE brandname='" + name + "')";
+                                        String sql4 = "UPDATE `users` SET `money`=" + amount + " WHERE username='" + uname + "'";
+                                        String sql5 = "DELETE FROM `orders` WHERE id=" + order;
+
                                         stmt.executeUpdate(sql3);
                                         stmt.executeUpdate(sql4);
                                         stmt.executeUpdate(sql5);
-                                        JOptionPane.showMessageDialog(null,"Order is now paid!");
-                                        
-                                    } else {
+                                        JOptionPane.showMessageDialog(null, "Order is now paid!");
+
+                                    } else { // If quantity ordered is lesser than the stock
                                         // Updating data in the tables here
                                         String name = rs2.getString("brandname");
                                         int left = rs2.getInt("stock") - rs.getInt("quantity");
-                                        String sql3 = "UPDATE `medicine` SET `stock="+left +" WHERE brandname='"+name+"')";
-                                        String sql4 = "UPDATE `users` SET `money`=" + amount + " WHERE username='" + uname + "'";
-                                        String sql5 = "DELETE FROM `orders` WHERE id="+order;
-                                        stmt.executeUpdate(sql3);
-                                        stmt.executeUpdate(sql4);
-                                        stmt.executeUpdate(sql5);
-                                        JOptionPane.showMessageDialog(null,"Order is now paid!");
+                                        if (left == 0) {
+                                            String sql3 = "DELETE FROM `medicine` WHERE brandname='" + name + "'";
+                                            String sql4 = "UPDATE `users` SET `money`=" + amount + " WHERE username='" + uname + "'";
+                                            String sql5 = "DELETE FROM `orders` WHERE id=" + order;
+                                            stmt.executeUpdate(sql3);
+                                            stmt.executeUpdate(sql4);
+                                            stmt.executeUpdate(sql5);
+                                        } else {
+                                            String sql3 = "UPDATE `medicine` SET `stock=" + left + " WHERE brandname='" + name + "')";
+                                            String sql4 = "UPDATE `users` SET `money`=" + amount + " WHERE username='" + uname + "'";
+                                            String sql5 = "DELETE FROM `orders` WHERE id=" + order;
+                                            stmt.executeUpdate(sql3);
+                                            stmt.executeUpdate(sql4);
+                                            stmt.executeUpdate(sql5);
+                                        }
+
+                                        JOptionPane.showMessageDialog(null, "Order is now paid!");
                                     }
-                                    
+
                                 } else {
                                     // If amount is lesser than the user's money
                                     double money = rs1.getDouble("money") - (rs.getDouble("amount"));
-                                    
-                                    
-                                    
-                                    
-                                }
-                                
+                                    String name = rs2.getString("brandname");
+                                    int left = rs2.getInt("stock") - rs.getInt("quantity");
+                                    String sql3 = "UPDATE `medicine` SET `stock=" + left + " WHERE brandname='" + name + "')";
+                                    String sql4 = "UPDATE `users` SET `money`=" + amount + " WHERE username='" + uname + "'";
+                                    String sql5 = "DELETE FROM `orders` WHERE id=" + order;
+                                    stmt.executeUpdate(sql3);
+                                    stmt.executeUpdate(sql4);
+                                    stmt.executeUpdate(sql5);
+                                    JOptionPane.showMessageDialog(null, "Order is now paid!");
 
+                                }
                             } else {
                                 // If medicine do not exist!
                                 JOptionPane.showMessageDialog(null, "Medicine do not exist!");
@@ -307,6 +318,71 @@ public class payOrder extends javax.swing.JFrame {
 
                         } else {
                             // If age is not a senior citizen
+                            ResultSet rs2 = stmt.executeQuery("SELECT * FROM `medicine` WHERE brandname='" + rs.getString("ordered_name") + "'");
+                            double amount = rs.getDouble("amount");
+                            if (rs2.next()) {
+                                if (rs.getDouble("amount") > rs1.getDouble("money")) { // If amount is greater than the user's money
+                                    JOptionPane.showMessageDialog(null, "Insufficient balance!");
+                                } else if (rs.getDouble("amount") == rs1.getDouble("money")) { // If ordered amount is equal to the money of the person
+                                    double money = 0;
+                                    String sql = "UPDATE `users` SET `money`=" + money + " WHERE username='" + uname + "'";
+                                    String sql1 = "UPDATE `medicine` SET `stock`=[value-6] WHERE brandname='" + rs.getString("ordered_name") + "'";
+                                    if (rs.getInt("quantity") > rs2.getInt("stock")) { // If the quantity ordered is greater than the stock
+                                        JOptionPane.showMessageDialog(null, "Currently can't process order because insufficient of stock! We'll update it later!");
+                                    } else if (rs.getInt("quantity") == rs2.getInt("stock")) { // If stock of the medicine is equal to ordered quantity
+                                        // Updating data in the tables here
+                                        
+                                        String name = rs2.getString("brandname");
+                                        String sql3 = "DELETE FROM `medicine` WHERE brandname='" + name + "')";
+                                        String sql4 = "UPDATE `users` SET `money`=" + amount + " WHERE username='" + uname + "'";
+                                        String sql5 = "DELETE FROM `orders` WHERE id=" + order;
+
+                                        stmt.executeUpdate(sql3);
+                                        stmt.executeUpdate(sql4);
+                                        stmt.executeUpdate(sql5);
+                                        JOptionPane.showMessageDialog(null, "Order is now paid!");
+
+                                    } else { // If quantity ordered is lesser than the stock
+                                        // Updating data in the tables here
+                                        String name = rs2.getString("brandname");
+                                        int left = rs2.getInt("stock") - rs.getInt("quantity");
+                                        if (left == 0) {
+                                            String sql3 = "DELETE FROM `medicine` WHERE brandname='" + name + "'";
+                                            String sql4 = "UPDATE `users` SET `money`=" + amount + " WHERE username='" + uname + "'";
+                                            String sql5 = "DELETE FROM `orders` WHERE id=" + order;
+                                            stmt.executeUpdate(sql3);
+                                            stmt.executeUpdate(sql4);
+                                            stmt.executeUpdate(sql5);
+                                        } else {
+                                            String sql3 = "UPDATE `medicine` SET `stock=" + left + " WHERE brandname='" + name + "')";
+                                            String sql4 = "UPDATE `users` SET `money`=" + amount + " WHERE username='" + uname + "'";
+                                            String sql5 = "DELETE FROM `orders` WHERE id=" + order;
+                                            stmt.executeUpdate(sql3);
+                                            stmt.executeUpdate(sql4);
+                                            stmt.executeUpdate(sql5);
+                                        }
+
+                                        JOptionPane.showMessageDialog(null, "Order is now paid!");
+                                    }
+
+                                } else {
+                                    // If amount is lesser than the user's money
+                                    double money = rs1.getDouble("money") - (rs.getDouble("amount"));
+                                    String name = rs2.getString("brandname");
+                                    int left = rs2.getInt("stock") - rs.getInt("quantity");
+                                    String sql3 = "UPDATE `medicine` SET `stock=" + left + " WHERE brandname='" + name + "')";
+                                    String sql4 = "UPDATE `users` SET `money`=" + amount + " WHERE username='" + uname + "'";
+                                    String sql5 = "DELETE FROM `orders` WHERE id=" + order;
+                                    stmt.executeUpdate(sql3);
+                                    stmt.executeUpdate(sql4);
+                                    stmt.executeUpdate(sql5);
+                                    JOptionPane.showMessageDialog(null, "Order is now paid!");
+
+                                }
+                            } else {
+                                // If medicine do not exist!
+                                JOptionPane.showMessageDialog(null, "Medicine do not exist!");
+                            }
                         }
 
                     }
@@ -314,15 +390,13 @@ public class payOrder extends javax.swing.JFrame {
                 } else {
                     JOptionPane.showMessageDialog(null, "Order ID do not exist!");
                 }
-                
-                
-                
+
                 con.close();
             } catch (ClassNotFoundException | SQLException e) {
                 JOptionPane.showMessageDialog(null, "Error connecting to database!");
 
             }
-            
+
         } catch (HeadlessException | NumberFormatException e) {
             JOptionPane.showMessageDialog(null, "Order ID should be a number!");
         }
