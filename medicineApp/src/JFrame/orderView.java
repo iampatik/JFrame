@@ -230,32 +230,56 @@ public class orderView extends javax.swing.JFrame {
             Statement stmt = con.createStatement();
             ResultSet rs = stmt.executeQuery("SELECT * FROM `medicine` WHERE brandname='" + bname + "'");
 
-            while (rs.next()) {
-                if (rs.getString("brandname").equals(bname)) {
-                    try {
-                        int pieces = Integer.parseInt(qty);
-                        if (pieces <= rs.getInt("stock")) {
-                            String sql = "INSERT INTO `orders` (`username`, `med_id`, `ordered_name`, `med_type`, `quantity`, `amount`) VALUES ('" + uname + "'," + rs.getInt("id") + ",'" + rs.getString("brandname") + "','"+ rs.getString("medicinetype") +"',"+ pieces + "," + (pieces * rs.getDouble("price") + ")");
-                            stmt.executeUpdate(sql);
-                            JOptionPane.showMessageDialog(null, "Ordered successfully!");
-                            this.dispose();
-                            new customerView(uname).setVisible(true);
-                            break;
-                        } else {
-                            JOptionPane.showMessageDialog(null, "Insufficient stock to order!");
-                            break;
-                        }
-                    } catch (NumberFormatException e) {
-                        JOptionPane.showMessageDialog(null, "Quantity should be a number!");
+            if (rs.next()) {
+                try {
+                    int pieces = Integer.parseInt(qty);
+                    if (pieces <= rs.getInt("stock")) {
+                        System.out.println("Nag read siya diri!");
+                        String sql = "INSERT INTO `orders` (`username`, `med_id`, `ordered_name`, `quantity`, `amount`) VALUES ('" + uname + "'," + rs.getInt("id") + ",'" + rs.getString("brandname") + "'," + pieces + "," + (pieces * rs.getDouble("price") + ")");
+                        stmt.executeUpdate(sql);
+                        JOptionPane.showMessageDialog(null, "Ordered successfully!");
+                        this.dispose();
+                        new customerView(uname).setVisible(true);
+                        con.close();
+
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Insufficient stock to order!");
+
                     }
-                } else {
-                    JOptionPane.showMessageDialog(null, "Medicine do not exist!");
-                    break;
+                } catch (NumberFormatException e) {
+                    JOptionPane.showMessageDialog(null, "Quantity should be a number!");
                 }
+
+            } else {
+                JOptionPane.showMessageDialog(null, "Medicine do not exist!");
             }
-            con.close();
-        } catch (HeadlessException | ClassNotFoundException | SQLException e) {
-            JOptionPane.showMessageDialog(null, "Error connecting to database!");
+
+//            while (rs.next()) {
+//                if (rs.getString("brandname").equals(bname)) {
+//                    try {
+//                        int pieces = Integer.parseInt(qty);
+//                        if (pieces <= rs.getInt("stock")) {
+//                            String sql = "INSERT INTO `orders` (`username`, `med_id`, `ordered_name`, `med_type`, `quantity`, `amount`) VALUES ('" + uname + "'," + rs.getInt("id") + ",'" + rs.getString("brandname") + "','"+ rs.getString("medicinetype") +"',"+ pieces + "," + (pieces * rs.getDouble("price") + ")");
+//                            stmt.executeUpdate(sql);
+//                            JOptionPane.showMessageDialog(null, "Ordered successfully!");
+//                            this.dispose();
+//                            new customerView(uname).setVisible(true);
+//                            break;
+//                        } else {
+//                            JOptionPane.showMessageDialog(null, "Insufficient stock to order!");
+//                            break;
+//                        }
+//                    } catch (NumberFormatException e) {
+//                        JOptionPane.showMessageDialog(null, "Quantity should be a number!");
+//                    }
+//                } else {
+//                    JOptionPane.showMessageDialog(null, "Medicine do not exist!");
+//                    break;
+//                }
+//            }
+            
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "This is the error!");
         }
 
 

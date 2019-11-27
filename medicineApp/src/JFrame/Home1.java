@@ -215,9 +215,7 @@ public final class Home1 extends javax.swing.JFrame {
             public void run() {
                 try {
                     new Home1().setVisible(true);
-                } catch (SQLException ex) {
-                    Logger.getLogger(Home1.class.getName()).log(Level.SEVERE, null, ex);
-                } catch (ClassNotFoundException ex) {
+                } catch (SQLException | ClassNotFoundException ex) {
                     Logger.getLogger(Home1.class.getName()).log(Level.SEVERE, null, ex);
                 }
                 

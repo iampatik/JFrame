@@ -213,36 +213,41 @@ public class removeMedicineView extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton1MouseClicked
 
     private void removeButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_removeButtonMouseClicked
-        String bname = inputName.getText();
-        boolean exist = false;
+        String bname = inputName.getText(); // inputted text from the view
+        boolean exist = false; // if medicine inputted from the text existed
 
         try {
             Class.forName("com.mysql.jdbc.Driver");
             Connection con = DriverManager.getConnection("jdbc:mysql://localhost/jframe", "root", "");
             Statement stmt = con.createStatement();
-            ResultSet rs = stmt.executeQuery("SELECT * FROM `medicine` WHERE brandname='" + bname + "'");
+            ResultSet rs = stmt.executeQuery("SELECT * FROM `medicine` WHERE brandname='" + bname + "'"); // only choose the medicine inputted from the view
 
             while (rs.next()) {
                 if (rs.getString("brandname").equals(bname)) {
                     try {
-                        exist = true;
-                        String sql = "DELETE FROM `medicine` WHERE brandname='" + bname + "'";
-                        stmt.executeUpdate(sql);
-                        JOptionPane.showMessageDialog(null, "Successfully removed!");
-                        this.dispose();
-                        new adminView().setVisible(true);  
+                        exist = true; // signifies that medicine existed 
+                        
+                        String sql = "DELETE FROM `medicine` WHERE brandname='" + bname + "'"; // query here
+                        
+                        stmt.executeUpdate(sql); // delete the medicine you've inputted earlier
+                        
+                        JOptionPane.showMessageDialog(null, "Successfully removed!"); // tells us that it is successful
+                        
+                        this.dispose(); // page will now close 
+                        
+                        new adminView().setVisible(true);  // page will go back to the pharmacist menu view
                         break;
                     } catch (HeadlessException | SQLException e) {
-                        JOptionPane.showMessageDialog(null, "Error removing!!");
+                        JOptionPane.showMessageDialog(null, "Error removing!!"); // This is something error while removing
                     }
                 }                              
             }
             if(exist == false){
-                JOptionPane.showMessageDialog(null, "Brand name do not exist!");                
+                JOptionPane.showMessageDialog(null, "Brand name do not exist!");  // if brand name you entered do not exist from the database              
             }
             
         } catch (HeadlessException | ClassNotFoundException | SQLException e) {
-            JOptionPane.showMessageDialog(null, "Error connecting!!");
+            JOptionPane.showMessageDialog(null, "Error connecting!!"); // can't connect to database maybe query has something wrong
         }
     }//GEN-LAST:event_removeButtonMouseClicked
 
