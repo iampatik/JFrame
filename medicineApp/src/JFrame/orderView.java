@@ -235,23 +235,23 @@ public class orderView extends javax.swing.JFrame {
                     int pieces = Integer.parseInt(qty);
                     if (pieces <= rs.getInt("stock")) {
                         System.out.println("Nag read siya diri!");
-                        String sql = "INSERT INTO `orders` (`username`, `med_id`, `ordered_name`, `quantity`, `amount`) VALUES ('" + uname + "'," + rs.getInt("id") + ",'" + rs.getString("brandname") + "'," + pieces + "," + (pieces * rs.getDouble("price") + ")");
+                        String sql = "INSERT INTO `orders` (`username`, `med_id`, `ordered_name`, `quantity`, `amount`) VALUES ('" + uname + "'," + rs.getInt("id") + ",'" + rs.getString("brandname") + "'," + pieces + "," + (pieces * rs.getDouble("price")) + ")";
                         stmt.executeUpdate(sql);
-                        JOptionPane.showMessageDialog(null, "Ordered successfully!");
+                        JOptionPane.showMessageDialog(rootPane, "Ordered successfully!");
                         this.dispose();
                         new customerView(uname).setVisible(true);
                         con.close();
 
                     } else {
-                        JOptionPane.showMessageDialog(null, "Insufficient stock to order!");
+                        JOptionPane.showMessageDialog(rootPane, "Insufficient stock to order!");
 
                     }
                 } catch (NumberFormatException e) {
-                    JOptionPane.showMessageDialog(null, "Quantity should be a number!");
+                    JOptionPane.showMessageDialog(rootPane, "Quantity should be a number!");
                 }
 
             } else {
-                JOptionPane.showMessageDialog(null, "Medicine do not exist!");
+                JOptionPane.showMessageDialog(rootPane, "Medicine do not exist!");
             }
 
 //            while (rs.next()) {
@@ -278,18 +278,17 @@ public class orderView extends javax.swing.JFrame {
 //                }
 //            }
             
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, "This is the error!");
+        } catch (HeadlessException | ClassNotFoundException | SQLException e) {
+            System.out.println(e);
+            JOptionPane.showMessageDialog(rootPane, "This is the error!");
         }
 
 
     }//GEN-LAST:event_orderButtonMouseClicked
 
     private void cancelButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_cancelButtonMouseClicked
-
         this.dispose();
-        customerView custom = new customerView(uname);
-        custom.setVisible(true);
+        new customerView(uname).setVisible(true);
 
     }//GEN-LAST:event_cancelButtonMouseClicked
 

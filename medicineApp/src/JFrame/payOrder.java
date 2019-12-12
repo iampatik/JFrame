@@ -235,13 +235,12 @@ public class payOrder extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_viewTableMouseClicked
 
-    
+
     private void payButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_payButtonMouseClicked
         String orderId = orderField.getText();
         int order = Integer.parseInt(orderId);
         try {
 
-            
             Class.forName("com.mysql.jdbc.Driver");
 
             Connection con = DriverManager.getConnection("jdbc:mysql://localhost/jframe", "root", "");
@@ -250,183 +249,216 @@ public class payOrder extends javax.swing.JFrame {
 
             ResultSet rs = stmt.executeQuery("SELECT * FROM `orders` WHERE id=" + order);
 
-            String orderedname = rs.getString("ordered_name");
-
             if (rs.next()) {
                 System.out.println("basa");
-                
-                ResultSet rs1 = stmt.executeQuery("SELECT * FROM `users` WHERE username='" + uname + "'");
-
-                ResultSet rs2 = stmt.executeQuery("SELECT * FROM `medicine` WHERE brandname='" + orderedname + "'");
-
-                double moneyLeftAdult = rs1.getDouble("money") - rs.getDouble("amount");
-
-                double moneyLeftSenior = rs1.getDouble("money") - (rs.getDouble("amount") * .80);
-
+                double amount = rs.getDouble("amount");
+                int qty = rs.getInt("quantity");
+                String orderedname = rs.getString("ordered_name");
                 System.out.println("nag run sa orders");
+
+                ResultSet rs1 = stmt.executeQuery("SELECT * FROM `users` WHERE username='" + uname + "'");
                 if (rs1.next()) {
-                    double amount = rs.getDouble("amount");
+                    double money = rs1.getDouble("money");
+                    double moneyLeftAdult = money - amount;
+                    int age = rs1.getInt("age");
+                    
+                    double moneyLeftSenior = ((money - amount) * .80);
+                    ResultSet rs2 = stmt.executeQuery("SELECT * FROM `medicine` WHERE brandname='" + orderedname + "'");
 
                     if (rs2.next()) {
+                        int qty1 = rs2.getInt("stock");
+                        int left = qty1 - qty;
+                        
+                        String name = rs2.getString("brandname");
                         System.out.println("nag run na siya sa medicine");
-                        if (amount > rs1.getDouble("money")) { // If amount is greater than the user's money
-                            JOptionPane.showMessageDialog(null, "Insufficient balance!");
-
-                        } else if (rs.getDouble("amount") == rs1.getDouble("money")) { // If ordered amount is equal to the money of the person
-                            double money = 0;
-                            int left = rs2.getInt("stock") - rs.getInt("quantity");
+                        if (amount > money) { // If amount is greater than the user's money
+                            JOptionPane.showMessageDialog(rootPane, "Insufficient balance!");
+                        } else if (amount == money) { // If ordered amount is equal to the money of the person
+                            
 //                                    String sql = "UPDATE `users` SET `money`=" + money + " WHERE username='" + uname + "'";
 //                                    String sql1 = "UPDATE `medicine` SET `stock`="+left+" WHERE brandname='" + rs.getString("ordered_name") + "'";
 
-                            if (rs.getInt("quantity") > rs2.getInt("stock")) { // If the quantity ordered is greater than the stock
-                                JOptionPane.showMessageDialog(null, "Currently can't process order because insufficient of stock! We'll update it later!");
+                            if (qty > qty1) { // If the quantity ordered is greater than the stock
+                                JOptionPane.showMessageDialog(rootPane, "Currently can't process order because insufficient of stock! We'll update it later!");
 
-                            } else if (rs.getInt("quantity") == rs2.getInt("stock")) { // If stock of the medicine is equal to ordered quantity
+                            } else if (qty == qty1) { // If stock of the medicine is equal to ordered quantity
                                 // Updating data in the tables here
-                                if (rs1.getInt("age") >= 60) {
-                                    String name = rs2.getString("brandname");
-                                    String sql3 = "DELETE FROM `medicine` WHERE brandname='" + name + "')";
+                                if (age >= 60) {
+                                    
+                                    String sql3 = "DELETE FROM `medicine` WHERE brandname='" + orderedname + "'";
                                     String sql4 = "UPDATE `users` SET `money`=" + moneyLeftSenior + " WHERE username='" + uname + "'";
                                     String sql5 = "DELETE FROM `orders` WHERE id=" + order;
 
-                                    stmt.executeUpdate(sql3);
-                                    stmt.executeUpdate(sql4);
-                                    stmt.executeUpdate(sql5);
+                                    stmt.addBatch(sql3);
+                                    stmt.addBatch(sql4);
+                                    stmt.addBatch(sql5);
+                                    stmt.executeBatch();
 
                                     JOptionPane.showMessageDialog(null, "Order is now paid!");
+                                    this.dispose();
+                                    new customerView(uname).setVisible(true);
                                 } else {
-                                    String name = rs2.getString("brandname");
-                                    String sql3 = "DELETE FROM `medicine` WHERE brandname='" + name + "')";
+
+                                    String sql3 = "DELETE FROM `medicine` WHERE brandname='" + orderedname + "'";
                                     String sql4 = "UPDATE `users` SET `money`=" + moneyLeftAdult + " WHERE username='" + uname + "'";
                                     String sql5 = "DELETE FROM `orders` WHERE id=" + order;
 
-                                    stmt.executeUpdate(sql3);
-                                    stmt.executeUpdate(sql4);
-                                    stmt.executeUpdate(sql5);
-                                    JOptionPane.showMessageDialog(null, "Order is now paid!");
+                                    stmt.addBatch(sql3);
+                                    stmt.addBatch(sql4);
+                                    stmt.addBatch(sql5);
+                                    stmt.executeBatch();
+                                    JOptionPane.showMessageDialog(rootPane, "Order is now paid!");
+                                    this.dispose();
+                                    new customerView(uname).setVisible(true);
                                 }
                             } else { // If quantity ordered is lesser than the stock
 
                                 // Updating data in the tables here
-                                String name = rs2.getString("brandname");
+                                
                                 if (left == 0) {
-                                    if (rs1.getInt("age") >= 60) {
-                                        String sql3 = "DELETE FROM `medicine` WHERE brandname='" + name + "'";
+                                    if (age >= 60) {
+                                        String sql3 = "DELETE FROM `medicine` WHERE brandname='" + orderedname + "'";
                                         String sql4 = "UPDATE `users` SET `money`=" + moneyLeftSenior + " WHERE username='" + uname + "'";
                                         String sql5 = "DELETE FROM `orders` WHERE id=" + order;
-                                        stmt.executeUpdate(sql3);
-                                        stmt.executeUpdate(sql4);
-                                        stmt.executeUpdate(sql5);
+                                        stmt.addBatch(sql3);
+                                        stmt.addBatch(sql4);
+                                        stmt.addBatch(sql5);
+                                        stmt.executeBatch();
 
-                                        JOptionPane.showMessageDialog(null, "Paid Successfully!");
+                                        JOptionPane.showMessageDialog(rootPane, "Paid Successfully!");
+                                        this.dispose();
+                                        new customerView(uname).setVisible(true);
                                     } else {
-                                        String sql3 = "DELETE FROM `medicine` WHERE brandname='" + name + "'";
+                                        String sql3 = "DELETE FROM `medicine` WHERE brandname='" + orderedname + "'";
                                         String sql4 = "UPDATE `users` SET `money`=" + moneyLeftAdult + " WHERE username='" + uname + "'";
                                         String sql5 = "DELETE FROM `orders` WHERE id=" + order;
-                                        stmt.executeUpdate(sql3);
-                                        stmt.executeUpdate(sql4);
-                                        stmt.executeUpdate(sql5);
+                                        stmt.addBatch(sql3);
+                                        stmt.addBatch(sql4);
+                                        stmt.addBatch(sql5);
+                                        stmt.executeBatch();
+                                        this.dispose();
+                                        new customerView(uname).setVisible(true);
                                     }
                                 } else {
-                                    if (rs1.getInt("age") >= 60) {
-                                        String sql3 = "UPDATE `medicine` SET `stock`=" + left + " WHERE brandname='" + name + "'";
+                                    if (age >= 60) {
+                                        String sql3 = "UPDATE `medicine` SET `stock`=" + left + " WHERE brandname='" + orderedname + "'";
                                         String sql4 = "UPDATE `users` SET `money`=" + moneyLeftSenior + " WHERE username='" + uname + "'";
                                         String sql5 = "DELETE FROM `orders` WHERE id=" + order;
-                                        stmt.executeUpdate(sql3);
-                                        stmt.executeUpdate(sql4);
-                                        stmt.executeUpdate(sql5);
+                                        stmt.addBatch(sql3);
+                                        stmt.addBatch(sql4);
+                                        stmt.addBatch(sql5);
+                                        stmt.executeBatch();
+                                        this.dispose();
+                                        new customerView(uname).setVisible(true);
 
-                                        JOptionPane.showMessageDialog(null, "Paid Successfully!");
+                                        JOptionPane.showMessageDialog(rootPane, "Paid Successfully!");
                                     } else {
-                                        String sql3 = "UPDATE `medicine` SET `stock`=" + left + " WHERE brandname='" + name + "'";
+                                        String sql3 = "UPDATE `medicine` SET `stock`=" + left + " WHERE brandname='" + orderedname + "'";
                                         String sql4 = "UPDATE `users` SET `money`=" + moneyLeftAdult + " WHERE username='" + uname + "'";
                                         String sql5 = "DELETE FROM `orders` WHERE id=" + order;
-                                        stmt.executeUpdate(sql3);
-                                        stmt.executeUpdate(sql4);
-                                        stmt.executeUpdate(sql5);
+                                        stmt.addBatch(sql3);
+                                        stmt.addBatch(sql4);
+                                        stmt.addBatch(sql5);
+                                        stmt.executeBatch();
 
-                                        JOptionPane.showMessageDialog(null, "Paid Successfully!");
+                                        JOptionPane.showMessageDialog(rootPane, "Paid Successfully!");
+                                        this.dispose();
+                                        new customerView(uname).setVisible(true);
                                     }
                                 }
                             }
 
                         } else {
                             // If amount is lesser than the user's money
+                            
+                            
+                            System.out.println("nag run siya sa else");
+                            if (qty > qty1) { // If the quantity ordered is greater than the stock
+                                JOptionPane.showMessageDialog(rootPane, "Currently can't process order because insufficient of stock! We'll update it later!");
 
-                            double money = rs1.getDouble("money") - (rs.getDouble("amount"));
-                            String name = rs2.getString("brandname");
-                            int left = rs2.getInt("stock") - rs.getInt("quantity");
-
-                            if (rs.getInt("quantity") > rs2.getInt("stock")) { // If the quantity ordered is greater than the stock
-                                JOptionPane.showMessageDialog(null, "Currently can't process order because insufficient of stock! We'll update it later!");
-
-                            } else if (rs.getInt("quantity") == rs2.getInt("stock")) { // If stock of the medicine is equal to ordered quantity
+                            } else if (qty == qty1) { // If stock of the medicine is equal to ordered quantity
                                 // Updating data in the tables here
 
-                                String sql3 = "DELETE FROM `medicine` WHERE brandname='" + name + "')";
+                                String sql3 = "DELETE FROM `medicine` WHERE brandname='" + orderedname + "'";
                                 String sql4 = "UPDATE `users` SET `money`=" + money + " WHERE username='" + uname + "'";
                                 String sql5 = "DELETE FROM `orders` WHERE id=" + order;
 
-                                stmt.executeUpdate(sql3);
-                                stmt.executeUpdate(sql4);
-                                stmt.executeUpdate(sql5);
-                                JOptionPane.showMessageDialog(null, "Order is now paid!");
+                                stmt.addBatch(sql3);
+                                stmt.addBatch(sql4);
+                                stmt.addBatch(sql5);
+                                stmt.executeBatch();
+                                JOptionPane.showMessageDialog(rootPane, "Order is now paid!");
+                                this.dispose();
+                                new customerView(uname).setVisible(true);
 
                             } else {
                                 if (left == 0) {
-                                    if (rs1.getInt("age") >= 60) {
-                                        String sql3 = "DELETE FROM `medicine` WHERE brandname='" + name + "'";
+                                    if (age >= 60) {
+                                        String sql3 = "DELETE FROM `medicine` WHERE brandname='" + orderedname + "'";
                                         String sql4 = "UPDATE `users` SET `money`=" + moneyLeftSenior + " WHERE username='" + uname + "'";
                                         String sql5 = "DELETE FROM `orders` WHERE id=" + order;
-                                        stmt.executeUpdate(sql3);
-                                        stmt.executeUpdate(sql4);
-                                        stmt.executeUpdate(sql5);
-                                        JOptionPane.showMessageDialog(null, "Paid Successfully!");
+                                        stmt.addBatch(sql3);
+                                        stmt.addBatch(sql4);
+                                        stmt.addBatch(sql5);
+                                        stmt.executeBatch();
+                                        JOptionPane.showMessageDialog(rootPane, "Paid Successfully!");
+                                        this.dispose();
+                                        new customerView(uname).setVisible(true);
                                     } else {
-                                        String sql3 = "DELETE FROM `medicine` WHERE brandname='" + name + "'";
+                                        String sql3 = "DELETE FROM `medicine` WHERE brandname='" + orderedname + "'";
                                         String sql4 = "UPDATE `users` SET `money`=" + moneyLeftAdult + " WHERE username='" + uname + "'";
                                         String sql5 = "DELETE FROM `orders` WHERE id=" + order;
-                                        stmt.executeUpdate(sql3);
-                                        stmt.executeUpdate(sql4);
-                                        stmt.executeUpdate(sql5);
+                                        stmt.addBatch(sql3);
+                                        stmt.addBatch(sql4);
+                                        stmt.addBatch(sql5);
+                                        stmt.executeBatch();
 
                                         JOptionPane.showMessageDialog(null, "Paid Successfully!");
+                                        this.dispose();
+                                        new customerView(uname).setVisible(true);
                                     }
                                 } else {
 
-                                    if (rs1.getInt("age") >= 60) {
-                                        String sql3 = "UPDATE `medicine` SET `stock`=" + left + " WHERE brandname='" + name + "'";
+                                    if (age >= 60) {
+                                        String sql3 = "UPDATE `medicine` SET `stock`=" + left + " WHERE brandname='" + orderedname + "'";
                                         String sql4 = "UPDATE `users` SET `money`=" + moneyLeftSenior + " WHERE username='" + uname + "'";
                                         String sql5 = "DELETE FROM `orders` WHERE id=" + order;
-                                        stmt.executeUpdate(sql3);
-                                        stmt.executeUpdate(sql4);
-                                        stmt.executeUpdate(sql5);
-                                        JOptionPane.showMessageDialog(null, "Paid Successfully!");
+                                        stmt.addBatch(sql3);
+                                        stmt.addBatch(sql4);
+                                        stmt.addBatch(sql5);
+                                        stmt.executeBatch();
+                                        JOptionPane.showMessageDialog(rootPane, "Paid Successfully!");
+                                        this.dispose();
+                                        new customerView(uname).setVisible(true);
 
                                     } else {
-                                        String sql3 = "UPDATE `medicine` SET `stock`=" + left + " WHERE brandname='" + name + "'";
+                                        String sql3 = "UPDATE `medicine` SET `stock`=" + left + " WHERE brandname='" + orderedname + "'";
                                         String sql4 = "UPDATE `users` SET `money`=" + moneyLeftAdult + " WHERE username='" + uname + "'";
                                         String sql5 = "DELETE FROM `orders` WHERE id=" + order;
-                                        stmt.executeUpdate(sql3);
-                                        stmt.executeUpdate(sql4);
-                                        stmt.executeUpdate(sql5);
-                                        JOptionPane.showMessageDialog(null, "Paid Successfully!");
+                                        stmt.addBatch(sql3);
+                                        stmt.addBatch(sql4);
+                                        stmt.addBatch(sql5);
+                                        stmt.executeBatch();
+                                        JOptionPane.showMessageDialog(rootPane, "Paid Successfully!");
+                                        this.dispose();
+                                        new customerView(uname).setVisible(true);
                                     }
                                 }
-                                JOptionPane.showMessageDialog(null, "Order is now paid!");
+                                JOptionPane.showMessageDialog(rootPane, "Order is now paid!");
                             }
                         }
                     } else {
-                        JOptionPane.showMessageDialog(null, "Medicine do not exist!");
+                        JOptionPane.showMessageDialog(rootPane, "Medicine do not exist!");
                     }
 
                 }
             } else {
-                JOptionPane.showMessageDialog(null, "Order ID do not exist!");
+                JOptionPane.showMessageDialog(rootPane, "Order ID do not exist!");
             }
 
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, "Error connecting to database!");
+        } catch (HeadlessException | ClassNotFoundException | SQLException e) {
+            System.out.println(e.getCause());
+            JOptionPane.showMessageDialog(rootPane, "Error connecting to database!");
 
         }
 
